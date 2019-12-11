@@ -1,5 +1,5 @@
 
-from com.azeezadewale.key_value_db import KeyValueDB, KeyValueObject
+from key_value_db import KeyValueDB, KeyValueObject
 
 key_value_DB = KeyValueDB("One=Adewale\nThrees=3333", True, '=', '\n', False)
 for kvo in key_value_DB:

@@ -3,15 +3,15 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'key_value_db',
-	packages = ['com.azeezadewale'],
+	packages = ['dev.sourcerersproject'],
 	include_package_data=True,
-	version = '1.1.2',
+	version = '1.1.4',
 	platforms='any',
-	description = 'Quick and easy manage, load, update and save key-value type database',
+	description = 'Light weight package to quickly and easily manage, load, update and save key-value type database',
 	author = 'Azeez Adewale',
 	author_email = 'azeezadewale98@gmail.com',
-	license='LGPL-3.0',
-	url = 'https://github.com/Thecarisma/key-value-db',
+	license='MIT',
+	url = 'https://keyvaluedb.github.io/',
 	zip_safe=False,
 	classifiers=[
         'Development Status :: 5 - Production/Stable',

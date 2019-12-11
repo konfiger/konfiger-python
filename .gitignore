@@ -14,3 +14,4 @@
 
 /pyhton/build/
 /pyhton/dist/
+*__pycache__/
