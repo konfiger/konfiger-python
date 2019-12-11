@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 
 setup(
     name = 'key_value_db',
-	packages = ['dev.sourcerersproject'],
+	packages = ['key_value_db'],
 	include_package_data=True,
 	version = '1.1.4',
 	platforms='any',
