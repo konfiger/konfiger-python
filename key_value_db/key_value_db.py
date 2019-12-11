@@ -5,7 +5,7 @@
 	Copyright 2019 Azeez Adewale <azeezadewale98@gmail.com>.
 '''
 
-from key_value_db import KeyValueObject
+from key_value_db.key_value_object import KeyValueObject
 
 '''
 

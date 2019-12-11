@@ -1,14 +1,15 @@
 import os
 from setuptools import setup, find_packages
 
+my_packages=find_packages()
 setup(
     name = 'key_value_db',
 	packages = ['key_value_db'],
 	include_package_data=True,
-	version = '1.1.4',
+	version = '1.1.5',
 	platforms='any',
 	description = 'Light weight package to quickly and easily manage, load, update and save key-value type database',
-	author = 'Azeez Adewale',
+	author = 'Adewale Azeez',
 	author_email = 'azeezadewale98@gmail.com',
 	license='MIT',
 	url = 'https://keyvaluedb.github.io/',
