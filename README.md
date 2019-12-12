@@ -109,14 +109,14 @@ The only accepted type that can be inserted is a valid `KeyValueObject` and `Str
 Add a kvp with it key and value
 
 ```python
-key_value_db.add("Greet", "Hello World");
+key_value_db.add("Greet", "Hello World")
 ```
 
 Add a kvp using the `KeyValueObject` class.
 
 ```python
-key_value_object = KeyValueObject("Greet", "Hello World");
-key_value_db.add(keyValueObject);
+key_value_object = KeyValueObject("Greet", "Hello World")
+key_value_db.add(keyValueObject)
 ```
 
 ### Finding Data
@@ -130,23 +130,23 @@ You can get the kvo using either the key or index. If the corresponding kvo is n
 Get the kvo using it integer index
 
 ```python
-key_value_db.getKeyValueObject(0);
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
+key_value_db.get_key_value_object(0)
+#<KeyValueObject@6034722440246165772:Key=Greet,Value=Hello World>
 ```
 
 Get the kvo using it key 
 
 ```python
-keyValueDB.getKeyValueObject("Greet");
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
+key_value_db.get_key_value_object("Greet")
+#<KeyValueObject@6034722440246165772:Key=Greet,Value=Hello World>
 ```
 
 Get the kvo using it key with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Name", "Adewale Azeez");
-keyValueDB.getKeyValueObject("Name", keyValueObject);
-//KeyValueObject {hashcode: 765363576, key: "Name", value: "Adewale Azeez"}
+key_value_object = KeyValueObject("Name", "Adewale Azeez")
+key_value_db.get_key_value_object("Name", key_value_object)
+#<KeyValueObject@6034722440246165772:Key=Name,Value=Adewale Azeez>
 ```
 
 #### Get Like KeyValue Object
@@ -156,16 +156,16 @@ Get a kvo by checking the kvdb for the kvo object that contains a part of the ke
 Get a similar kvo using it key part 
 
 ```python
-keyValueDB.getLikeKeyValueObject("eet");
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
+key_value_db.get_like_key_value_object("eet")
+#<KeyValueObject@6034722440246165772:Key=Greet,Value=Hello World>
 ```
 
 Get a similar kvo using it key part with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Name", "Adewale Azeez");
-keyValueDB.getKeyValueObject("Nam", keyValueObject);
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Name,Value=Adewale Azeez
+key_value_object = KeyValueObject("Name", "Adewale Azeez")
+key_value_db.get_like_key_value_object("Nam", key_value_object)
+#<KeyValueObject@6034722440246165772:Key=Name,Value=Adewale Azeez>
 ```
 
 #### Get
@@ -177,30 +177,30 @@ If a fallback kvo is sent as second parameter then when the request key is not f
 Get a value using it integer index
 
 ```python
-keyValueDB.get(0);
-//"Hello World"
+key_value_db.get(0)
+#"Hello World"
 ```
 
 Get the value using it key 
 
 ```python
-keyValueDB.get("Greet");
-//"Hello World"
+key_value_db.get("Greet")
+#"Hello World"
 ```
 
 Get the kvo using it key with fallback value
 
 ```python
-keyValueDB.get("Licence", "The MIT Licence");
-//"The MIT Licence"
+key_value_db.get("Licence", "The MIT Licence")
+#"The MIT Licence"
 ```
 
 Get the kvo using it key with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Licence", "The MIT Licence");
-keyValueDB.get("Name", keyValueObject);
-//"The MIT Licence"
+key_value_object = KeyValueObject("Licence", "The MIT Licence")
+key_value_db.get("Name", key_value_object)
+#"The MIT Licence"
 ```
 
 #### Get Like 
@@ -212,16 +212,16 @@ If a fallback kvo is sent as second parameter then when the request key is not f
 Get a value using it key part 
 
 ```python
-keyValueDB.getLike("eet");
-//"Hello World"
+key_value_db.get_like("eet")
+#"Hello World"
 ```
 
 Get a value using it key part with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Licence", "The MIT Licence");
-keyValueDB.getLike("Li", keyValueObject);
-//"The MIT Licence"
+key_value_object = KeyValueObject("Licence", "The MIT Licence")
+key_value_db.get_like("Li", key_value_object)
+#"The MIT Licence"
 ```
 
 ### Updating Data
@@ -235,15 +235,15 @@ The `set` method is used to change the value of the kvo using the index of the k
 Set a kvo value using it index
 
 ```python
-keyValueDB.set(0, "Hello World from thecarisma");
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World from thecarisma
+key_value_db.set(0, "Hello World from thecarisma")
+#<KeyValueObject@603472244355765772:Key=Greet,Value=Hello World from thecarisma>
 ```
 
 Set a kvo value using it key
 
 ```python
-keyValueDB.set("Greet", "Hello World from thecarisma");
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World from thecarisma
+key_value_db.set("Greet", "Hello World from thecarisma")
+#<KeyValueObject@603472244355765772:Key=Greet,Value=Hello World from thecarisma>
 ```
 
 #### Set KeyValue Object
@@ -254,17 +254,17 @@ Note that this method completly changes the kvo so it can be used to replace a k
 Set a kvo using it index
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Licence", "The MIT Licence");
-keyValueDB.setKeyValueObject(0, keyValueObject);
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Licence,Value=The MIT Licence
+key_value_object = KeyValueObject("Licence", "The MIT Licence")
+key_value_db.set_keyValueObject(0, key_value_object)
+#<KeyValueObject@6034545687687898767:Key=Licence,Value=The MIT Licence>
 ```
 
 Set a kvo value using it key
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Licence", "The MIT Licence");
-keyValueDB.setKeyValueObject("Greet", keyValueObject);
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Licence,Value=The MIT Licence
+key_value_object = KeyValueObject("Licence", "The MIT Licence")
+key_value_db.set_key_value_object("Greet", key_value_object)
+#<KeyValueObject@6034545687687898767:Key=Licence,Value=The MIT Licence>
 ```
 
 ### Inserting Data
@@ -274,14 +274,14 @@ A new kvp can be inserted by invoking the `add` method. The kvp can be added usi
 Add a new kvp using the key and value
 
 ```python
-keyValueDB.add("Key", "This is the value");
+key_value_db.add("Key", "This is the value")
 ```
 
 Add a new kvp using a new KeyValueObject
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Key", "This is the value");
-keyValueDB.add(keyValueObject);
+key_value_object = KeyValueObject("Key", "This is the value")
+key_value_db.add(key_value_object)
 ```
 
 ### Removing Data
@@ -291,17 +291,17 @@ Remove a kvp completely from the kvdb using either it key of the integer index. 
 Remove a kvp using integer index
 
 ```python
-keyValueDB.remove(0);
-//removes the first kvp in the kvdb
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
+key_value_db.remove(0)
+#removes the first kvp in the kvdb
+#<KeyValueObject@6034722440246165772:Key=Greet,Value=Hello World>
 ```
 
 Remove a kvp using it key
 
 ```python
-keyValueDB.remove("Greet");
-//removes the first kvp in the kvdb
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
+key_value_db.remove("Greet")
+#removes the first kvp in the kvdb
+#<KeyValueObject@6034722440246165772:Key=Greet,Value=Hello World>
 ```
 
 ## Size, Clear, isEmpty
@@ -311,8 +311,8 @@ keyValueDB.remove("Greet");
 Get the size of the kvo in the kvdb.
 
 ```python
-keyValueDB.size();
-//4
+key_value_db.size()
+#4
 ```
 
 ### Clear
@@ -320,8 +320,8 @@ keyValueDB.size();
 Remove all the elements and kvo from the kvdb
 
 ```python
-keyValueDB.clear();
-//keyValueDB.size() = 0
+key_value_db.clear()
+#key_value_db.size() = 0
 ```
 
 ### isEmpty

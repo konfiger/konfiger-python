@@ -297,5 +297,22 @@ class KeyValueDB:
 					self.__string_value += self.seperator
 			self.db_changed = False
 		return self.__string_value
-		
+
+	'''
+	
+	'''
+	def clear(self):
+		self.key_value_objects = []
+
+	'''
+	
+	'''
+	def is_empty(self):
+		return len(self.key_value_objects) == 0
+
+	'''
+	
+	'''
+	def size(self):
+		return len(self.key_value_objects)
 		
