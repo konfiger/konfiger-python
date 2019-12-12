@@ -1,5 +1,5 @@
 
-import key_value_db
+from key_value_db import KeyValueDB, KeyValueObject
 
 key_value_DB = KeyValueDB("One=Adewale\nThrees=3333", True, '=', '\n', False)
 for kvo in key_value_DB:
@@ -8,7 +8,7 @@ for kvo in key_value_DB:
 print()
         
 print(key_value_DB.get("Greeting"))
-key_value_DB.set("Greeting", "Hello from Azeez Adewale")
+key_value_DB.set("Greeting", "Hello from Adewale Azeez")
 key_value_DB.add("One", "Added another one element")
 key_value_DB.add("Null", "Remove this")
 print(key_value_DB.getLike("Three"))

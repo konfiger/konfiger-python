@@ -48,28 +48,23 @@ pip install key_value_db
 The following example load, update, read and remove a simple key value object 
 
 ```python
-import dev.sourcerersproject.KeyValueDB;
+from key_value_db import KeyValueDB, KeyValueObject
 
-public class KeyValueTest {
-    public static void main(String[] args) {
-        //initialize the key-value
-        KeyValueDB keyValueDB = new KeyValueDB("Greet=Hello World,Project=KeyValueDB", true, '=', ',', false);
+#initialize the key-value
+key_value_db = KeyValueDB("Greet=Hello World,Project=KeyValueDB", True, '=', ',', False)
 
-        //get an object
-        System.out.println(keyValueDB.get("Greet"));
+#get an object
+print(key_value_db.get("Greet"))
 
-        //remove an object
-        keyValueDB.remove("Greet");
+#remove an object
+key_value_db.remove("Greet")
 
-        //add an object
-        keyValueDB.add("What", "i don't know what to write here");
+#add an object
+key_value_db.add("What", "i don't know what to write here")
 
-        //print all the objects
-        for (KeyValueObject kvo : keyValueDB) {
-            System.out.println(kvo);
-        }
-    }
-}
+#print all the objects
+for kvo in key_value_db:
+	print(kvo)
 ```
 
 ## Legends
@@ -92,19 +87,19 @@ You can use the package to update and create an existing key value database. Thi
 Create a new keyValueDB. The default seperator between the key and value is `=` and the delimeter between the kvp is `\n`(newline).
 
 ```python
-KeyValueDB keyValueDB = new KeyValueDB(();
+key_value_db = KeyValueDB()
 ```
 
 To load existing KeyValueDB  
 
 ```python
-KeyValueDB keyValueDB = new KeyValueDB((
-        "Greet=Hello World,Project=KeyValueDB", //pss read string from file
-        true, //case sensitive is true
-        '=', //the seperator from key and value
-        ',', //the delimeter for the key-value-pair
-        false //error tolerance if true no exception is thrown
-        );
+key_value_db = KeyValueDB(
+        "Greet=Hello World,Project=KeyValueDB", #pss read string from file
+        True, #case sensitive is true
+        '=', #the seperator from key and value
+        ',', #the delimeter for the key-value-pair
+        False #error tolerance if true no exception is thrown
+        )
 ```
 
 ### Inserting Data
@@ -114,14 +109,14 @@ The only accepted type that can be inserted is a valid `KeyValueObject` and `Str
 Add a kvp with it key and value
 
 ```python
-keyValueDB.add("Greet", "Hello World");
+key_value_db.add("Greet", "Hello World");
 ```
 
 Add a kvp using the `KeyValueObject` class.
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Greet", "Hello World");
-keyValueDB.add(keyValueObject);
+key_value_object = KeyValueObject("Greet", "Hello World");
+key_value_db.add(keyValueObject);
 ```
 
 ### Finding Data
@@ -135,7 +130,7 @@ You can get the kvo using either the key or index. If the corresponding kvo is n
 Get the kvo using it integer index
 
 ```python
-keyValueDB.getKeyValueObject(0);
+key_value_db.getKeyValueObject(0);
 //dev.sourcerersproject.KeyValueObject@4554617c:Key=Greet,Value=Hello World
 ```
 
@@ -149,9 +144,9 @@ keyValueDB.getKeyValueObject("Greet");
 Get the kvo using it key with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Name", "Azeez Adewale");
+final KeyValueObject keyValueObject = new KeyValueObject("Name", "Adewale Azeez");
 keyValueDB.getKeyValueObject("Name", keyValueObject);
-//KeyValueObject {hashcode: 765363576, key: "Name", value: "Azeez Adewale"}
+//KeyValueObject {hashcode: 765363576, key: "Name", value: "Adewale Azeez"}
 ```
 
 #### Get Like KeyValue Object
@@ -168,9 +163,9 @@ keyValueDB.getLikeKeyValueObject("eet");
 Get a similar kvo using it key part with fallback kvo
 
 ```python
-final KeyValueObject keyValueObject = new KeyValueObject("Name", "Azeez Adewale");
+final KeyValueObject keyValueObject = new KeyValueObject("Name", "Adewale Azeez");
 keyValueDB.getKeyValueObject("Nam", keyValueObject);
-//dev.sourcerersproject.KeyValueObject@4554617c:Key=Name,Value=Azeez Adewale
+//dev.sourcerersproject.KeyValueObject@4554617c:Key=Name,Value=Adewale Azeez
 ```
 
 #### Get
@@ -376,5 +371,5 @@ Or you can support me to continue making awesome open source projects > https://
 
 ## License
 
-MIT License Copyright (c) 2019 Azeez Adewale - keyvaluedb
+MIT License Copyright (c) 2019 Adewale Azeez - keyvaluedb
 

@@ -1,7 +1,6 @@
 import os
 from setuptools import setup, find_packages
 
-my_packages=find_packages()
 setup(
     name = 'key_value_db',
 	packages = ['key_value_db'],

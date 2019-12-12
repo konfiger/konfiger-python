@@ -2,7 +2,7 @@
 '''
 	The MIT License
 	
-	Copyright 2019 Azeez Adewale <azeezadewale98@gmail.com>.
+	Copyright 2019 Adewale Azeez <azeezadewale98@gmail.com>.
 '''
 
 from key_value_db.key_value_object import KeyValueObject
@@ -71,27 +71,27 @@ class KeyValueDB:
 	'''
 	
 	'''
-	def getKeyValueObject(self, index_key, default_key_value_object=KeyValueObject("", "")):
+	def get_key_value_object(self, index_key, default_key_value_object=KeyValueObject("", "")):
 		if isinstance(index_key, int):
 			return self.key_value_objects[index_key]
 			
 		elif isinstance(index_key, str):
 			index_key = (index_key.lower() if not self.case_sensitive else index_key)
 			for key_value_object in self.key_value_objects:
-				if key_value_object.getKey() == index_key:
+				if key_value_object.get_key() == index_key:
 					return key_value_object
 			return default_key_value_object
 		else:
-			raise TypeError("com.azeezadewale.KeyValueDB.getKeyValueObject: Invalid parameter expecting string or number")
+			raise TypeError("com.azeezadewale.KeyValueDB.get_keyValueObject: Invalid parameter expecting string or number")
 		
 	'''
 	
 	'''
-	def getLikeKeyValueObject(self, key, default_key_value_object=KeyValueObject("", "")):
+	def get_like_key_value_object(self, key, default_key_value_object=KeyValueObject("", "")):
 		if isinstance(key, str):
 			key = (key.lower() if not self.case_sensitive else key)
 			for key_value_object in self.key_value_objects:
-				if key in key_value_object.getKey():
+				if key in key_value_object.get_key():
 					return key_value_object
 			return default_key_value_object
 		else:
@@ -102,17 +102,17 @@ class KeyValueDB:
 	'''
 	def get(self, index_key, default_value=""):
 		if isinstance(index_key, int):
-			return self.key_value_objects[index_key].getValue()
+			return self.key_value_objects[index_key].get_value()
 			
 		elif isinstance(index_key, str):
 			index_key = (index_key.lower() if not self.case_sensitive else index_key)
 			for key_value_object in self.key_value_objects:
-				if key_value_object.getKey() == index_key:
-					return key_value_object.getValue()
+				if key_value_object.get_key() == index_key:
+					return key_value_object.get_value()
 			if isinstance(default_value, str):
 				return default_value
 			elif isinstance(default_value, KeyValueObject):
-				return default_value.getValue()
+				return default_value.get_value()
 			else:
 				raise TypeError("com.azeezadewale.KeyValueDB.get: Invalid second parameter expecting string or KeyValueObject")
 			
@@ -122,16 +122,16 @@ class KeyValueDB:
 	'''
 	
 	'''
-	def getLike(self, key, default_value=""):
+	def get_like(self, key, default_value=""):
 		if isinstance(key, str):
 			key = (key.lower() if not self.case_sensitive else key)
 			for key_value_object in self.key_value_objects:
-				if key in key_value_object.getKey():
-					return key_value_object.getValue()
+				if key in key_value_object.get_key():
+					return key_value_object.get_value()
 			if isinstance(default_value, str):
 				return default_value
 			elif isinstance(default_value, KeyValueObject):
-				return default_value.getValue()
+				return default_value.get_value()
 			else:
 				raise TypeError("com.azeezadewale.KeyValueDB.get: Invalid second parameter expecting string or KeyValueObject")
 		else:
@@ -145,14 +145,14 @@ class KeyValueDB:
 			raise TypeError("com.azeezadewale.KeyValueDB.set: Invalid second parameter expecting string")
 			
 		if isinstance(index_key, int):
-			self.key_value_objects[index_key].setValue(value)
+			self.key_value_objects[index_key].set_value(value)
 			self.db_changed = True
 			
 		elif isinstance(index_key, str):
 			index_key = (index_key.lower() if not self.case_sensitive else index_key)
 			for key_value_object in self.key_value_objects:
-				if key_value_object.getKey() == index_key:
-					key_value_object.setValue(value)
+				if key_value_object.get_key() == index_key:
+					key_value_object.set_value(value)
 					self.db_changed = True
 					return
 			self.add(index_key, value)
@@ -163,9 +163,9 @@ class KeyValueDB:
 	'''
 	
 	'''
-	def setKeyValueObject(self, index_key, key_value_object_value):
+	def set_key_value_object(self, index_key, key_value_object_value):
 		if not isinstance(key_value_object_value, KeyValueObject):
-			raise TypeError("com.azeezadewale.KeyValueDB.setKeyValueObject: Invalid second parameter expecting KeyValueObject")
+			raise TypeError("com.azeezadewale.KeyValueDB.set_keyValueObject: Invalid second parameter expecting KeyValueObject")
 			
 		if isinstance(index_key, int):
 			self.key_value_objects[index_key] = key_value_object_value
@@ -174,14 +174,14 @@ class KeyValueDB:
 		elif isinstance(index_key, str):
 			index_key = (index_key.lower() if not self.case_sensitive else index_key)
 			for i in range(0, len(self.key_value_objects)):
-				if self.key_value_objects[i].getKey() == index_key:
+				if self.key_value_objects[i].get_key() == index_key:
 					self.key_value_objects[i] = key_value_object_value
 					self.db_changed = True
 					return 
 			self.add(key_value_object_value)
 			
 		else:
-			raise TypeError("com.azeezadewale.KeyValueDB.setKeyValueObject: Invalid parameter expecting string or number")
+			raise TypeError("com.azeezadewale.KeyValueDB.set_keyValueObject: Invalid parameter expecting string or number")
 			
 	'''
 	
@@ -193,8 +193,8 @@ class KeyValueDB:
 			if value != "":
 				raise TypeError("com.azeezadewale.KeyValueDB.add: Only one parameter is expecter when adding a KeyValueObject")
 			
-			if self.get((key_value_object_value_key.getKey().lower() if not self.case_sensitive else key_value_object_value_key.getKey())) != "":
-				self.setKeyValueObject((key_value_object_value_key.getKey().lower() if not self.case_sensitive else key_value_object_value_key.getKey()), key_value_object_value_key)
+			if self.get((key_value_object_value_key.get_key().lower() if not self.case_sensitive else key_value_object_value_key.get_key())) != "":
+				self.set_keyValueObject((key_value_object_value_key.get_key().lower() if not self.case_sensitive else key_value_object_value_key.get_key()), key_value_object_value_key)
 				return
 			self.key_value_objects.append(key_value_object_value_key)
 			self.db_changed = True
@@ -224,7 +224,7 @@ class KeyValueDB:
 			ret_key_value_object = KeyValueObject("", "")
 			index_key = (index_key.lower() if not self.case_sensitive else index_key)
 			for i in range(0, len(self.key_value_objects)):
-				if self.key_value_objects[i].getKey() == index_key:
+				if self.key_value_objects[i].get_key() == index_key:
 					ret_key_value_object = self.key_value_objects[i]
 					del self.key_value_objects[i]
 					self.db_changed = True
@@ -292,7 +292,7 @@ class KeyValueDB:
 		if self.db_changed:
 			self.__string_value = ""
 			for i in range(0, len(self.key_value_objects)):
-				self.__string_value += self.key_value_objects[i].getKey() + self.delimeter + self.key_value_objects[i].getValue()
+				self.__string_value += self.key_value_objects[i].get_key() + self.delimeter + self.key_value_objects[i].get_value()
 				if i != len(self.key_value_objects) - 1:
 					self.__string_value += self.seperator
 			self.db_changed = False

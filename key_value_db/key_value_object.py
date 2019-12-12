@@ -2,7 +2,7 @@
 '''
 	The MIT License
 	
-	Copyright 2019 Azeez Adewale <azeezadewale98@gmail.com>.
+	Copyright 2019 Adewale Azeez <azeezadewale98@gmail.com>.
 '''
 
 '''
@@ -22,25 +22,25 @@ class KeyValueObject:
 	'''
 	
 	'''
-	def getKey(self):
+	def get_key(self):
 		return self.key
 
 	'''
 	
 	'''
-	def getValue(self):
+	def get_value(self):
 		return self.value
 
 	'''
 	
 	'''
-	def setKey(self, key):
+	def set_key(self, key):
 		self.key = key.strip()
 
 	'''
 	
 	'''
-	def setValue(self, value):
+	def set_value(self, value):
 		self.value = value
 
 	'''
