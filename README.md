@@ -1,4 +1,4 @@
-# <p style="text-align: center;" align="center"><img src="https://github.com/keyvaluedb/key-value-db/raw/master/icons/key-value-db-python.png" alt="key-value-db-python" style="width:180px;height:160px;" width="180" height="160" /><br /> key-value-db-python</p>
+# <p style="text-align: center;" align="center"><img src="https://github.com/keyvaluedb/keyvaluedb.github.io/raw/master/icons/key-value-db-python.png" alt="key-value-db-python" style="width:180px;height:160px;" width="180" height="160" /><br /> key-value-db-python</p>
 
 <p style="text-align: center;" align="center">Light weight package to quickly and easily manage, load, update and save key-value type database </p>
 
@@ -37,7 +37,7 @@ ___
 
 ## Installation
 
-Install the package from the Python package index or download the zip and .egg file from [releases](https://github.com/keyvaluedb/key-value-db-java/releases).
+Install the package from the Python package index or download the zip and .egg file from [releases](https://github.com/keyvaluedb/keyvaluedb.github.io-java/releases).
 
 ```bash
 pip install key_value_db
@@ -329,34 +329,33 @@ key_value_db.clear()
 Check whether the kvdb contains any kvo in it.
 
 ```python
-keyValueDB.isEmpty();
-//false
+key_value_db.is_empty();
+#false
 ```
 
 ## Saving collection
 
-The kvp collection kvdb can be inspected as a string using the `toString` method. The returned value can be saved locally by writing to a persistent storage or to a plain text file. The output of the `toString` method is determined by the kvos, the seperator and the delimeter.
+The kvp collection kvdb can be inspected as a string using the `__str__` method. The returned value can be saved locally by writing to a persistent storage or to a plain text file. The output of the `__str__` method is determined by the kvos, the seperator and the delimeter.
 
 ```python
-keyValueDB.toString();
-// "Greet=Hello World,Project=KeyValueDB,Project=KeyValueDB,Licence=The MIT Licence"
+key_value_db.__str__();
+#"Greet=Hello World,Project=KeyValueDB,Project=KeyValueDB,Licence=The MIT Licence"
 ```
 
 ## Iterating collection
 
-The KeyValueDB object can be iterated natively using the `for..of` loop expression. 
+The KeyValueDB object can be iterated natively using the `for..in` loop expression. 
 
 ```python
-for (KeyValueObject KeyValueObject : keyValueDB) {
-    //operate on the KeyValueObject
-}
+for kvo in key_value_db:
+	#operate on the KeyValueObject
 ```
 
 ## Contributing
 
 Before you begin contribution please read the contribution guide at [CONTRIBUTING GUIDE](https://keyvaluedb.github.io/contributing.html)
 
-You can open issue or file a request that only address problems in this implementation on this repo, if the issue address the concepts of the package then create an issue or rfc [here](https://github.com/keyvaluedb/key-value-db/)
+You can open issue or file a request that only address problems in this implementation on this repo, if the issue address the concepts of the package then create an issue or rfc [here](https://github.com/keyvaluedb/keyvaluedb.github.io/)
 
 ## Support
 
