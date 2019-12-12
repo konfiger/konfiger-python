@@ -37,7 +37,7 @@ ___
 
 ## Installation
 
-Install the package from the Python package index or download the zip and .egg file from [releases](https://github.com/keyvaluedb/keyvaluedb.github.io-java/releases).
+Install the package from the Python package index or download the zip and .egg file from [releases](https://github.com/keyvaluedb/keyvaluedb-python/releases).
 
 ```bash
 pip install key_value_db
