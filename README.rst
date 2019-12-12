@@ -1,23 +1,3 @@
-#
-
-.. raw:: html
-
-   <p style="text-align: center;" align="center">
-
- key-value-db-python
-
-.. raw:: html
-
-   </p>
-
-   <p style="text-align: center;" align="center">
-
-Light weight package to quickly and easily manage, load, update and save
-key-value type database
-
-.. raw:: html
-
-   </p>
 
 The sample use cases of this package is loading configuration file,
 language file, preference setting in an application. More use cases can
