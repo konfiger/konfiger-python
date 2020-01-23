@@ -359,14 +359,9 @@ You can open issue or file a request that only address problems in this implemen
 
 ## Support
 
-You can support some of this community as they make big impact in the developement of people to get started with software engineering and open source.
+You can support some of this community as they make big impact in the developement of people to get started with software engineering.
 
 - https://www.patreon.com/devcareer
-- https://opencollective.com/osca
-
-Or you can support me to continue making awesome open source projects > https://patreon.com/thecarisma. Thanks!🤗
-
-**You can make big difference**.
 
 ## License
 
