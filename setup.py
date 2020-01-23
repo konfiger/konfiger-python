@@ -5,7 +5,7 @@ setup(
     name = 'key_value_db',
 	packages = ['key_value_db'],
 	include_package_data=True,
-	version = '1.1.6',
+	version = '1.1.7',
 	platforms='any',
 	description = 'Light weight package to quickly and easily manage, load, update and save key-value type database',
     long_description = open('README.rst').read(),
