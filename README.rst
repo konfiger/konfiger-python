@@ -1,3 +1,23 @@
+#
+
+.. raw:: html
+
+   <p style="text-align: center;" align="center">
+
+ key-value-db-python
+
+.. raw:: html
+
+   </p>
+
+   <p style="text-align: center;" align="center">
+
+Light weight package to quickly and easily manage, load, update and save
+key-value type database
+
+.. raw:: html
+
+   </p>
 
 The sample use cases of this package is loading configuration file,
 language file, preference setting in an application. More use cases can
@@ -43,6 +63,7 @@ Table of content
    -  `Saving collection <#saving-collection>`__
    -  `Iterating collection <#iterating-collection>`__
 
+-  `How it works <#how-it-works>`__
 -  `Contributing <#contributing>`__
 -  `Support <#support>`__
 -  `License <#license>`__
@@ -52,7 +73,7 @@ Installation
 
 Install the package from the Python package index or download the zip
 and .egg file from
-`releases <https://github.com/keyvaluedb/keyvaluedb.github.io-java/releases>`__.
+`releases <https://github.com/keyvaluedb/key-value-db-python/releases>`__.
 
 .. code:: bash
 
@@ -427,6 +448,20 @@ loop expression.
     for kvo in key_value_db:
         #operate on the KeyValueObject
 
+How it works
+------------
+
+KeyValueObject class contains the key and value field and the fields
+setter and getter. The KeyValueObject is the main internal type used in
+the KeyValueDB class.
+
+In KeyValueDB the key value pair is stored in ``[KeyValueObject...]``
+type, all search, updating and removal is done on the
+``keyValueObjects`` in the class. The string sent as first parameter if
+parsed into valid key value using the separator and delimiter fields.
+The ``__str__`` method also parse the ``keyValueObjects`` content into a
+valid string with regards to the separator and delimeter.
+
 Contributing
 ------------
 
@@ -442,16 +477,9 @@ Support
 -------
 
 You can support some of this community as they make big impact in the
-developement of people to get started with software engineering and open
-source.
+developement of people to get started with software engineering.
 
 -  https://www.patreon.com/devcareer
--  https://opencollective.com/osca
-
-Or you can support me to continue making awesome open source projects >
-https://patreon.com/thecarisma. Thanks!🤗
-
-**You can make big difference**.
 
 License
 -------

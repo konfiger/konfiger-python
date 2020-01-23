@@ -18,7 +18,7 @@ ___
 	- [Finding data](#finding-data)
 	    - [Get KeyValue Object](#get-keyvalue-object)
 	    - [Get Like KeyValue Object](#get-like-keyvalue-object)
-	    - [Get](#get-like)
+	    - [Get](#get)
 	    - [Get Like](#get-like)
 	- [Updating data](#updating-data)
         - [Set](#set)
@@ -377,5 +377,5 @@ You can support some of this community as they make big impact in the developeme
 
 ## License
 
-MIT License Copyright (c) 2019 Adewale Azeez - keyvaluedb
+MIT License Copyright (c) 2020 Adewale Azeez - keyvaluedb
 
