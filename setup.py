@@ -2,22 +2,22 @@ import os
 from setuptools import setup, find_packages
 
 setup(
-    name = 'key_value_db',
-	packages = ['key_value_db'],
+    name = 'konfiger',
+	packages = ['konfiger'],
 	include_package_data=True,
-	version = '1.1.7',
+	version = '1.2.4',
 	platforms='any',
-	description = 'Light weight package to quickly and easily manage, load, update and save key-value type database',
+	description = 'Light weight package to manage key value based configuration and data files for Python',
     long_description = open('README.rst').read(),
 	author = 'Adewale Azeez',
 	author_email = 'azeezadewale98@gmail.com',
 	license='MIT',
-	url = 'https://keyvaluedb.github.io/',
+	url = 'https://konfiger.github.io/konfiger-python',
 	zip_safe=False,
 	classifiers=[
         'Development Status :: 5 - Production/Stable',
 		'Natural Language :: English',
-        'License :: OSI Approved :: GNU Lesser General Public License v3 (LGPLv3)',
+        'License :: OSI Approved :: MIT License (MIT)',
         'Topic :: Database',
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Database :: Front-Ends',
@@ -34,6 +34,7 @@ setup(
 		'database', 
 		'python', 
 		'package', 
+		'thecarisma', 
 		'quick', 
 		'simple', 
 		'dictionary'
