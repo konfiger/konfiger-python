@@ -1,4 +1,30 @@
 
+"""
+    The MIT License
+    Copyright 2020 Adewale Azeez <azeezadewale98@gmail.com>.
+"""
+
+def type_of(arg):
+    return 
+
+def is_string(arg):
+    return isinstance(arg, str)
+
+def is_number(arg):
+    return isinstance(arg, int) or isinstance(arg, numbers.Integral) or isinstance(arg, numbers.Real)
+
+def is_char(arg):
+    return isinstance(arg, str) and len(arg) == 1
+
+def is_boolean(arg):
+    return isinstance(arg, bool)
+
+def is_float(arg):
+    return isinstance(arg, float)
+
+def is_object(arg):
+    return isinstance(arg, type)
+
 def escape_string(value, *extra_escape):
     final_value = ""
     for i in range(0, len(value)):

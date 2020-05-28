@@ -1,10 +1,10 @@
-#!python test_konfiger_util.py
+#!python
 
 import unittest 
 import os
 import sys
 sys.path.insert(0, os.getcwd())
-from src.konfiger_util import *
+from src import escape_string, un_escape_string
   
 class TestKonfigerUtil(unittest.TestCase): 
   
