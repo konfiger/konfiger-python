@@ -16,7 +16,7 @@ def is_number(arg):
 def is_char(arg):
     return isinstance(arg, str) and len(arg) == 1
 
-def is_boolean(arg):
+def is_bool(arg):
     return isinstance(arg, bool)
 
 def is_float(arg):
