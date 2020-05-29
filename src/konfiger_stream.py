@@ -29,7 +29,7 @@ class KonfigerStream:
         self.seperator = seperator
         self.err_tolerance = err_tolerance
         self.is_file = is_file
-        self.triming_key = True
+        self.trimming_key = True
         self.comment_prefix = "//"
         self.is_first = 0
         
@@ -52,12 +52,12 @@ class KonfigerStream:
         self.done_reading_ = False
 
     def is_trimming_key(self):
-        return self.triming_key
+        return self.trimming_key
         
-    def set_triming_key(self, triming_key):
-        if not is_bool(triming_key):
-            raise TypeError("Invalid argument for delimeter expecting bool found " + str(type(stream_obj)))
-        self.triming_key = triming_key
+    def set_trimming_key(self, trimming_key):
+        if not is_bool(trimming_key):
+            raise TypeError("Invalid argument, expecting a bool found " + str(type(trimming_key)))
+        self.trimming_key = trimming_key
         
     def get_comment_prefix(self):
         return self.comment_prefix
@@ -102,7 +102,7 @@ class KonfigerStream:
                 return self.has_next_ 
             else:
                 while self.read_position < len(self.stream_obj):
-                    while (self.stream_obj[sub_count+self.read_position] == self.comment_prefix[sub_count]):
+                    while sub_count < comment_size and self.stream_obj[sub_count+self.read_position] == self.comment_prefix[sub_count]:
                         sub_count += 1
                     if sub_count == comment_size:
                         self.read_position += 1
@@ -112,7 +112,9 @@ class KonfigerStream:
                         return self.has_next()
                     if self.stream_obj[self.read_position].strip() == "":
                         self.read_position += 1
-                        continue         
+                        continue
+                    self.hasNext_ = True
+                    return self.hasNext_      
                 self.has_next_ = False 
                 return self.has_next_ 
                     
@@ -162,14 +164,14 @@ class KonfigerStream:
                         value += char_
                     prev_char = char_
         else:
-            for character in self.stream_obj:
-                self.read_position += 1
+            for self.read_position in range(self.read_position, len(self.stream_obj)+1):
                 if self.read_position == len(self.stream_obj):
                     if key != "":
                         if parse_key == True and self.err_tolerance == False:
                             raise LookupError("Invalid entry detected near Line " + str(line) + ":"  + str(column))
                     self.done_reading()
                     break
+                character = self.stream_obj[self.read_position]
                 column += 1
                 if character == '\n':
                     line += 1
@@ -191,7 +193,7 @@ class KonfigerStream:
                     value += character
             self.read_position += 1
         return (
-                key.strip() if self.triming_key else key, 
+                key.strip() if self.trimming_key else key, 
                 un_escape_string(value, self.seperator)
             )
         
