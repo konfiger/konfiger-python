@@ -30,6 +30,7 @@ class KonfigerStream:
         self.err_tolerance = err_tolerance
         self.is_file = is_file
         self.trimming_key = True
+        self.trimming_value = True
         self.comment_prefix = "//"
         self.is_first = 0
         
@@ -58,6 +59,14 @@ class KonfigerStream:
         if not is_bool(trimming_key):
             raise TypeError("Invalid argument, expecting a bool found " + str(type(trimming_key)))
         self.trimming_key = trimming_key
+
+    def is_trimming_value(self):
+        return self.trimming_value
+        
+    def set_trimming_value(self, trimming_value):
+        if not is_bool(trimming_value):
+            raise TypeError("Invalid argument, expecting a bool found " + str(type(trimming_value)))
+        self.trimming_value = trimming_value
         
     def get_comment_prefix(self):
         return self.comment_prefix
@@ -194,7 +203,7 @@ class KonfigerStream:
             self.read_position += 1
         return (
                 key.strip() if self.trimming_key else key, 
-                un_escape_string(value, self.seperator)
+                un_escape_string(value, self.seperator).strip() if self.trimming_value else un_escape_string(value, self.seperator)
             )
         
     def done_reading(self):

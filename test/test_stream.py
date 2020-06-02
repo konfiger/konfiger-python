@@ -78,5 +78,32 @@ class TestKonfigerStream(unittest.TestCase):
         while ks.has_next():
             self.assertEqual(ks.next()[0].startswith("//"), False)
 
+    def test_string_stream_value_trimming(self):
+        ks = string_stream(" Name =Adewale Azeez :Project = konfiger: Date= April 24 2020 :Language = Multiple Languages", '=', ':')
+        self.assertNotEqual(ks.is_trimming_value(), False)
+        with self.assertRaises(TypeError) as context:
+            ks.set_trimming_value("Hello World")
+        self.assertTrue('Invalid argument, expecting a bool found' in str(context.exception))
+        self.assertEqual(ks.is_trimming_value(), True)
+        self.assertEqual(ks.next()[1], "Adewale Azeez")
+        self.assertEqual(ks.next()[1], "konfiger")
+        self.assertEqual(ks.next()[1], "April 24 2020")
+        self.assertEqual(ks.next()[1], "Multiple Languages")    
+    
+    def test_string_stream_key_value_trimming(self):
+        entries_str = " Name =Adewale Azeez :Project = konfiger: Date= April 24 2020 :Language = Multiple Languages"
+        ks = string_stream(entries_str, '=', ':')
+        ks1 = string_stream(entries_str, '=', ':')
+        self.assertEqual(ks.next()[0], "Name")
+        self.assertEqual(ks.next()[0], "Project")
+        self.assertEqual(ks.next()[0], "Date")
+        self.assertEqual(ks.next()[0], "Language")
+        
+        
+        self.assertEqual(ks1.next()[1], "Adewale Azeez")
+        self.assertEqual(ks1.next()[1], "konfiger")
+        self.assertEqual(ks1.next()[1], "April 24 2020")
+        self.assertEqual(ks1.next()[1], "Multiple Languages")
+
 if __name__ == '__main__': 
     unittest.main() 
