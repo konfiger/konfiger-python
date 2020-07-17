@@ -105,5 +105,11 @@ class TestKonfigerStream(unittest.TestCase):
         self.assertEqual(ks1.next()[1], "April 24 2020")
         self.assertEqual(ks1.next()[1], "Multiple Languages")
 
+    def read_multiline_entry_and_test_continuation_char_in_file_stream(self):
+        print("TODO NOW")
+            
+    def read_multiline_entry_and_test_continuation_char_in_file_stream(self):
+        print("TODO")
+
 if __name__ == '__main__': 
     unittest.main() 
