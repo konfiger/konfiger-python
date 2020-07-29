@@ -14,7 +14,7 @@ class TestKonfigerUtil(unittest.TestCase):
         t2 = un_escape_string(actual_str)
         
         self.assertNotEqual(actual_str, t1)
-        self.assertEqual(t1, "\\,Hello/¬W\n-\t-\torld")
+        self.assertEqual(t1, "\\,Hello^¬W\n-\t-\torld")
         self.assertNotEqual(t1, un_escape_string(t1, '¬'))
         self.assertNotEqual(actual_str, un_escape_string(t1))
         self.assertEqual(un_escape_string(t1, '¬'), actual_str)
