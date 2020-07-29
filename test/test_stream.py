@@ -105,11 +105,45 @@ class TestKonfigerStream(unittest.TestCase):
         self.assertEqual(ks1.next()[1], "April 24 2020")
         self.assertEqual(ks1.next()[1], "Multiple Languages")
 
-    def read_multiline_entry_and_test_continuation_char_in_file_stream(self):
-        print("TODO NOW")
+    def test_read_multiline_entry_and_test_continuation_char_in_file_stream(self):
+        ks = file_stream("test/test.contd.conf")
+        while ks.has_next():
+            self.assertEqual(ks.next()[1].endswith('\\'), False)
             
-    def read_multiline_entry_and_test_continuation_char_in_file_stream(self):
-        print("TODO")
+    def test_read_multiline_entry_and_test_continuation_char_in_string_stream(self):
+        ks = string_stream("""
+Description = This project is the closest thing to Android +
+              [Shared Preference](https://developer.android.com/reference/android/content/SharedPreferences) +
+              in other languages and off the Android platform.
+ProjectName = konfiger
+ProgrammingLanguages = C, C++, C#, Dart, Elixr, Erlang, Go, +
+                        Haskell, Java, Kotlin, NodeJS, Powershell, +
+                        Python, Ring, Rust, Scala, Visual Basic, +
+                        and whatever language possible in the future
+        """)
+        ks.set_continuation_char('+')
+        while ks.has_next():
+            self.assertEqual(ks.next()[1].endswith('\\'), False)
+            
+    def test_backward_slash_ending_value(self):
+        ks = string_stream("uri1 = http://uri1.thecarisma.com/core/api/v1/\r\n" +
+                "uri2 = http://uri2.thecarisma.com/core/api/v2/\r\n" +
+                "ussd.uri = https://ussd.thecarisma.com/")
+        count = 0
+        while ks.has_next():
+            self.assertEqual(ks.next()[1].endswith("/"), True)
+            count += 1
+        self.assertEqual(count, 3)
+        
+    def test_escape_slash_ending(self):
+        ks = string_stream("external-resource-location = \\\\988.43.13.9\\testing\\public\\sansportal\\rideon\\\\\r\n" +
+                "boarding-link = https://boarding.thecarisma.com/konfiger\r\n" +
+                "ussd.uri = thecarisma.com\\")
+        count = 0
+        while ks.has_next():
+            self.assertNotEqual(len(ks.next()[1]), 0)
+            count += 1
+        self.assertEqual(count, 3)
 
 if __name__ == '__main__': 
     unittest.main() 

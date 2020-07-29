@@ -32,6 +32,7 @@ class KonfigerStream:
         self.trimming_key = True
         self.trimming_value = True
         self.comment_prefix = "//"
+        self.continuation_char = "\\"
         self.is_first = 0
         
         if is_file:
@@ -73,8 +74,16 @@ class KonfigerStream:
         
     def set_comment_prefix(self, comment_prefix):
         if not is_string(comment_prefix):
-            raise TypeError("Invalid argument for delimeter expecting str found " + str(type(stream_obj)))
+            raise TypeError("Invalid argument for delimeter expecting str found " + str(type(comment_prefix)))
         self.comment_prefix = comment_prefix
+        
+    def get_continuation_char(self):
+        return self.continuation_char
+        
+    def set_continuation_char(self, continuation_char):
+        if not is_char(continuation_char):
+            raise TypeError("Invalid argument for delimeter expecting char found " + str(type(continuation_char)))
+        self.continuation_char = continuation_char
         
     def has_next(self):
         if not self.done_reading_:
@@ -136,6 +145,8 @@ class KonfigerStream:
         value = ""
         parse_key = True
         prev_char = None
+        prev_prev_char = None
+        i = '\0'
         line = 1
         column = 0
         
@@ -156,8 +167,19 @@ class KonfigerStream:
                     if char_ == '\n':
                         line += 1
                         column = 0 
-                    if char_ == self.seperator and prev_char != '\\' and not parse_key:
-                        if value == "":
+                        if not parse_key and prev_char == self.continuation_char and prev_prev_char != '\\':
+                            if value[len(value)-1] == '\r':
+                                value = value[:-2]
+                            else:
+                                value = value[:-1]
+                            while char_.strip() == "":
+                                f.seek(self.read_position)
+                                self.read_position += 1
+                                char_ = f.read(1)
+                            self.read_position -= 1
+                            continue
+                    if char_ == self.seperator and prev_char != '^':
+                        if len(key) == 0 and value == "":
                             continue
                         if parse_key == True and self.err_tolerance == False:
                             raise LookupError("Invalid entry detected near Line " + str(line) + ":"  + str(column))
@@ -171,7 +193,8 @@ class KonfigerStream:
                         key += char_
                     else:
                         value += char_
-                    prev_char = char_
+                    prev_prev_char = prev_prev_char if char_ == '\r' else prev_char
+                    prev_char = ('\0' if prev_char != '\\' else '\\') if char_ == '\r' else char_
         else:
             for self.read_position in range(self.read_position, len(self.stream_obj)+1):
                 if self.read_position == len(self.stream_obj):
@@ -185,7 +208,17 @@ class KonfigerStream:
                 if character == '\n':
                     line += 1
                     column = 0
-                if character == self.seperator and self.stream_obj[self.read_position-1] != '/' and not parse_key:
+                    if not parse_key and prev_char == self.continuation_char and prev_prev_char != '\\':
+                            if value[len(value)-1] == '\r':
+                                value = value[:-2]
+                            else:
+                                value = value[:-1]
+                            while character.strip() == "":
+                                self.read_position += 1
+                                character = self.stream_obj[self.read_position]
+                            self.read_position -= 1
+                            continue
+                if character == self.seperator and prev_char != '^' and not parse_key:
                     if key == "" and value =="":
                         continue
                     if parse_key == True and self.err_tolerance == False:
@@ -200,6 +233,8 @@ class KonfigerStream:
                     key += character
                 else:
                     value += character
+                prev_prev_char = prev_prev_char if character == '\r' else prev_char
+                prev_char = ('\0' if prev_char != '\\' else '\\') if character == '\r' else character
             self.read_position += 1
         return (
                 key.strip() if self.trimming_key else key, 
