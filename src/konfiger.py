@@ -1,16 +1,21 @@
 
+"""
+    The MIT License
+    Copyright 2020 Adewale Azeez <azeezadewale98@gmail.com>.
+"""
+
 max_capacity = 10000000
 
-def from_file(file_path, lazy_load, delimeter, seperator):
+def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n'):
     pass
 
-def from_string(raw_string, lazy_load, delimeter, seperator):
+def from_string(raw_string, lazy_load=True, delimeter='=', seperator='\n'):
     pass
 
-def from_stream(konfiger_stream, lazy_load):
+def from_stream(konfiger_stream, lazy_load=True):
     pass
 
-class Konfiger
+class Konfiger:
 
     def __init__(self, delimeter, seperator, lazy_load, stream):
         pass
