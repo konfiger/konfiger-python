@@ -39,6 +39,12 @@ class Konfiger:
         self.file_path = None
         self.attached_resolve_obj = None
         
+        if not self.lazy_load:
+            self.lazy_loader()
+         
+        if not is_bool(lazy_load):
+            raise TypeError("Invalid argument expecting boolean found " + str(type(lazy_load)))
+        
     def put(self, key, value):
         pass
         

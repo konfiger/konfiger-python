@@ -41,13 +41,13 @@ class KonfigerStream:
             if not is_string(stream_obj):
                 raise TypeError("Invalid argument expecting str found " + str(type(stream_obj)))
         if not is_bool(err_tolerance):
-            raise TypeError("Invalid argument for err_tolerance expecting bool found " + str(type(stream_obj)))
+            raise TypeError("Invalid argument for err_tolerance expecting bool found " + str(type(err_tolerance)))
         if delimeter and not seperator:
             raise TypeError("Invalid length of argument, seperator or delimeter parameter is missing")
         if not is_char(self.delimeter):
-            raise TypeError("Invalid argument for delimeter expecting char found " + str(type(stream_obj)))
+            raise TypeError("Invalid argument for delimeter expecting char found " + str(type(self.delimeter)))
         if not is_char(self.seperator):
-            raise TypeError("Invalid argument for seperator expecting char found " + str(type(stream_obj)))
+            raise TypeError("Invalid argument for seperator expecting char found " + str(type(self.seperator)))
         
         self.read_position = 0
         self.has_next_ = False
