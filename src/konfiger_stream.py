@@ -74,7 +74,7 @@ class KonfigerStream:
         
     def set_comment_prefix(self, comment_prefix):
         if not is_string(comment_prefix):
-            raise TypeError("Invalid argument for delimeter expecting str found " + str(type(comment_prefix)))
+            raise TypeError("Invalid argument for comment prefix expecting str found " + str(type(comment_prefix)))
         self.comment_prefix = comment_prefix
         
     def get_continuation_char(self):
@@ -82,8 +82,16 @@ class KonfigerStream:
         
     def set_continuation_char(self, continuation_char):
         if not is_char(continuation_char):
-            raise TypeError("Invalid argument for delimeter expecting char found " + str(type(continuation_char)))
+            raise TypeError("Invalid argument for continuation char expecting char found " + str(type(continuation_char)))
         self.continuation_char = continuation_char
+        
+    def is_error_tolerant(self):
+        return self.err_tolerance
+        
+    def error_tolerance(self, err_tolerance):
+        if not is_bool(err_tolerance):
+            raise TypeError("Invalid argument for err_tolerance expecting char found " + str(type(err_tolerance)))
+        self.err_tolerance = err_tolerance
         
     def has_next(self):
         if not self.done_reading_:
@@ -114,8 +122,8 @@ class KonfigerStream:
                             self.read_position += 1
                             f.seek(self.read_position)
                             continue
-                        self.hasNext_ = True
-                        return self.hasNext_
+                        self.has_next_ = True
+                        return self.has_next_
                 self.has_next_ = False 
                 return self.has_next_ 
             else:
@@ -131,8 +139,8 @@ class KonfigerStream:
                     if self.stream_obj[self.read_position].strip() == "":
                         self.read_position += 1
                         continue
-                    self.hasNext_ = True
-                    return self.hasNext_      
+                    self.has_next_ = True
+                    return self.has_next_      
                 self.has_next_ = False 
                 return self.has_next_ 
                     
@@ -140,7 +148,7 @@ class KonfigerStream:
     
     def next(self):
         if self.done_reading_:
-            raise BufferError("You cannot read beyound the stream length, always use hasNext() to verify the Stream still has an entry")
+            raise BufferError("You cannot read beyound the stream length, always use has_next() to verify the Stream still has an entry")
         key = ""
         value = ""
         parse_key = True

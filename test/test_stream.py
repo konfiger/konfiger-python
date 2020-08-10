@@ -65,7 +65,7 @@ class TestKonfigerStream(unittest.TestCase):
             self.assertNotEqual(ks.next()[0], "Project")
         with self.assertRaises(BufferError) as context:
             self.assertNotEqual(ks.next()[0], "Project")
-        self.assertTrue('You cannot read beyound the stream length, always use hasNext() to verify the Stream still has an entry' in str(context.exception))
+        self.assertTrue('You cannot read beyound the stream length, always use has_next() to verify the Stream still has an entry' in str(context.exception))
 
     def test_the_single_pair_commenting_in_file_stream_1(self):
         ks = file_stream("test/test.comment.inf")
@@ -144,6 +144,28 @@ ProgrammingLanguages = C, C++, C#, Dart, Elixr, Erlang, Go, +
             self.assertNotEqual(len(ks.next()[1]), 0)
             count += 1
         self.assertEqual(count, 3)
+        
+    def test_error_tolerancy_in_string_stream(self):
+        ks = string_stream("Firt=1st", '-', '$', True)
+        
+        self.assertEqual(ks.is_error_tolerant(), True)
+        while ks.has_next():
+            self.assertEqual(len(ks.next()[1]), 0)
+        
+    def test_error_tolerancy_in_file_stream(self):
+        ks = file_stream("test/test.comment.inf")
+        
+        self.assertEqual(ks.is_error_tolerant(), False)
+        while ks.has_next():
+            with self.assertRaises(LookupError) as context:
+                self.assertEqual(len(ks.next()[1]), 0)
+            self.assertTrue('Invalid entry detected near Line' in str(context.exception))
+            break
+        
+        ks.error_tolerance(True)
+        self.assertEqual(ks.is_error_tolerant(), True)
+        while ks.has_next():
+            self.assertNotEqual(ks.next()[1], None)
 
 if __name__ == '__main__': 
     unittest.main() 

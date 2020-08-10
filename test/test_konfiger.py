@@ -1,3 +1,4 @@
+#!python {0}
 
 import unittest 
 import os
@@ -14,6 +15,7 @@ Number=215415245
 Float=56556.436746
 Boolean=true
 """, False)
+        self.assertEqual(kon.get("String"), "This is a string")
         
 
 if __name__ == '__main__': 
