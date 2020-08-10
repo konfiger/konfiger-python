@@ -38,16 +38,15 @@ class Konfiger:
         self.read_index = 0
         self.file_path = None
         self.attached_resolve_obj = None
+        self.enable_cache_ = True
+        self.prev_cache_object = { "ckey": "", "cvalue": None }
+        self.current_cache_object = { "ckey": "", "cvalue": None }
         
         if not self.lazy_load:
             self.lazy_loader()
          
         if not is_bool(lazy_load):
-            raise TypeError("io.github.thecarisma.konfiger: Invalid argument expecting boolean found " + str(type(lazy_load)))
-            
-        self.enable_cache_ = True
-        self.prev_cache_object = { "ckey": "", "cvalue": None }
-        self.current_cache_object = { "ckey": "", "cvalue": None }
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument expecting boolean found " + str(type(lazy_load)))            
         
     def put(self, key, value):
         if is_string(key):
@@ -55,11 +54,11 @@ class Konfiger:
                 pass
             
             if is_string(value):
-                put_string(key, value)
+                self.put_string(key, value)
             elif is_bool(value):
-                put_boolean(key, value)
+                self.put_boolean(key, value)
             else:
-                put_string(key, str(value))
+                self.put_string(key, str(value))
         else:
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key must be string found " + str(type(key)))
         
@@ -69,33 +68,39 @@ class Konfiger:
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key must be string found " + str(type(key)))
         if not is_string(value):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, value must be string found " + str(type(value)))
-        if key not in konfiger_objects:
-            if len(konfiger_objects) >= MAX_CAPACITY:
+            
+        if key not in self.konfiger_objects:
+            if len(self.konfiger_objects) >= MAX_CAPACITY:
                 raise TypeError("io.github.thecarisma.konfiger: konfiger has reached it maximum capacity of " + MAX_CAPACITY)
+        
+        self.konfiger_objects[key] = value
+        self.changes_occur = True
+        if self.enable_cache_:
+            self.shift_cache(key, value)
         
     def put_boolean(self, key, value):
         if not is_bool(value):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, value must be bool found " + str(type(value)))
-        put_string(key, str(value))
+        self.put_string(key, str(value))
         
     def put_long(self, key, value):
         if not is_number(value):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, value must be a number found " + str(type(value)))
-        put_string(key, str(value))
+        self.put_string(key, str(value))
         
     def put_int(self, key, value):
-        put_long(key, value)
+        self.put_long(key, value)
         
     def put_float(self, key, value):
         if not is_float(value):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, value must be a floating type found " + str(type(value)))
-        put_string(key, str(value))
+        self.put_string(key, str(value))
         
     def put_double(self, key, value):
-        put_float(key, value)
+        self.put_float(key, value)
         
     def put_comment(self, the_comment):
-        put_string(self.stream.get_comment_prefix(), the_comment)
+        self.put_string(self.stream.get_comment_prefix(), the_comment)
         
     def get(self, key, default_value=None):
         if not is_string(key):
@@ -103,9 +108,9 @@ class Konfiger:
             
         if self.enable_cache_:
             if self.current_cache_object["ckey"] == key:
-                return self.current_cache_object["value"]
+                return self.current_cache_object["cvalue"]
             if self.prev_cache_object["ckey"] == key:
-                return self.prev_cache_object["value"]
+                return self.prev_cache_object["cvalue"]
                 
         if key not in self.konfiger_objects and self.lazy_load:
             if not self.loading_ends:
@@ -128,35 +133,36 @@ class Konfiger:
                     return entry_value
         
         value = None   
-        if default_value is not None and key in self.konfiger_objects:
+        if default_value is not None and key not in self.konfiger_objects:
             value = str(default_value)
         elif key in self.konfiger_objects:
             value = self.konfiger_objects[key]
             if self.enable_cache_:
                 self.shift_cache(key, value)
+        
         return value
         
     def get_string(self, key, default_value=None):
-        value = get(key, default_value)
+        value = self.get(key, default_value)
         return value if value is not None else default_value
         
     def get_boolean(self, key, default_value=None):
-        value = get(key, default_value)
+        value = self.get(key, default_value)
         return value.lower() == "true" if value is not None else False
         
     def get_long(self, key, default_value=None):
-        value = get(key, default_value)
+        value = self.get(key, default_value)
         return int(value) if value is not None else default_value
         
     def get_int(self, key, default_value=None):
-        return get_long(key, default_value)
+        return self.get_long(key, default_value)
         
     def get_float(self, key, default_value=None):
-        value = get(key, default_value)
+        value = self.get(key, default_value)
         return float(value) if value is not None else default_value
         
     def get_double(self, key, default_value=None):
-        return get_float(key, default_value)
+        return self.get_float(key, default_value)
         
     def shift_cache(self, key, value):
         self.prev_cache_object = self.current_cache_object
@@ -171,19 +177,44 @@ class Konfiger:
         self.enable_cache_ = enable_cache_
         
     def contains(self, key):
-        pass
+        if not is_string(key):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key must be a string found " + str(type(key)))
+            
+        if key in self.konfiger_objects:
+            return True
+        if not self.loading_ends and self.lazy_load:
+            self.changes_occur = True
+            while self.stream.has_next():
+                obj = self.stream.next()
+                self.konfiger_objects[obj[0]] = obj[1]
+                if obj[0] == key:
+                    return True
+            self.loading_ends = True
+        
+        return False
         
     def keys(self):
-        pass
+        if not self.loading_ends and self.lazy_load:
+            self.lazy_loader()
+        
+        return self.konfiger_objects.keys()
         
     def values(self):
-        pass
+        if not self.loading_ends and self.lazy_load:
+            self.lazy_loader()
+        
+        return self.konfiger_objects.values()
         
     def entries(self):
-        pass
+        if not self.loading_ends and self.lazy_load:
+            self.lazy_loader()
+        
+        return self.konfiger_objects.items()
         
     def clear(self):
-        pass
+        self.changes_occur = True
+        self.enable_cache(self.enable_cache_)
+        self.konfiger_objects.clear()
         
     def remove(self, key_index):
         pass
@@ -192,37 +223,87 @@ class Konfiger:
         pass
         
     def size(self):
-        pass
+        if not self.loading_ends and self.lazy_load:
+            self.lazy_loader()
+        
+        return len(self.konfiger_objects)
         
     def is_empty(self):
-        pass
+        return self.size() == 0
         
     def get_seperator(self):
-        pass
+        return self.seperator
         
     def set_seperator(self, seperator):
-        pass
+        if not is_char(seperator):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, seperator must be a char found " + str(type(seperator)))
+            
+        if self.seperator != seperator:
+            self.changes_occur = True
+            old_seperator = self.seperator
+            self.seperator = seperator
+            for key, value in self.konfiger_objects.items():
+                self.konfiger_objects[key] = un_escape_string(value, seperator)
         
-    def get_delimeter(self, delimeter):
-        pass
+    def get_delimeter(self):
+        return self.delimeter
         
-    def set_delimeter(self):
-        pass
+    def set_delimeter(self, delimeter):
+        if not is_char(delimeter):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, delimeter must be a char found " + str(type(delimeter)))
+            
+        self.changes_occur = True
+        self.delimeter = delimeter
         
-    def error_tolerance(self, err_tolerance):
-        pass
+    def is_case_sensitive(self):
+        return self.case_sensitive
         
-    def is_error_tolerant(self):
-        pass
+    def set_case_sensitivity(self, case_sensitive):
+        if not is_bool(case_sensitive):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, case_sensitive must be a bool found " + str(type(case_sensitive)))
+            
+        self.case_sensitive = case_sensitive
         
     def hash_code(self):
-        pass
+        if self.hashcode != 0:
+            return self.hashcode
+            
+        c = '\0'
+        if len(self.string_value) == 0:
+            self.string_value = self.__str__()
+        for i in range(len(self.string_value)):
+            c = ord(self.string_value[i])
+            self.hashcode = ((self.hashcode << 5) - self.hashcode) + c
+            self.hashcode = self.hashcode | 0
         
-    def to_string(self):
-        pass
+        return self.hashcode
+        
+    def __str__(self):
+        if self.changes_occur:
+            if not self.loading_ends and self.lazy_load:
+                self.lazy_loader()
+            
+            self.string_value = ""
+            index = 0
+            for key, value in self.konfiger_objects.items():
+                if key is None:
+                    continue
+                self.string_value = self.string_value + key + self.delimeter + escape_string(value, self.seperator)
+                index = index + 1
+                if index < len(self.konfiger_objects):
+                    self.string_value = self.string_value + self.seperator
+            self.changes_occur = False
+            
+        return self.string_value
         
     def lazy_loader(self):
-        pass
+        if self.loading_ends:
+            return
+        
+        while self.stream.has_next():
+            obj = self.stream.next()
+            self.put_string(obj[0], obj[1])
+        self.loading_ends = True
         
     def save(file_path=None):
         pass
