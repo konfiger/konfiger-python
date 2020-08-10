@@ -14,7 +14,7 @@ String=This is a string
 Number=215415245
 Float=56556.436746
 Boolean=true
-""", False)
+""", True)
         self.assertEqual(kon.get("String"), "This is a string")
         
 
