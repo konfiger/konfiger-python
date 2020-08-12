@@ -10,8 +10,11 @@ def type_of(arg):
 def is_string(arg):
     return isinstance(arg, str)
 
+def is_int(arg):
+    return isinstance(arg, int)
+
 def is_number(arg):
-    return isinstance(arg, int) or isinstance(arg, numbers.Integral) or isinstance(arg, numbers.Real)
+    return is_int(arg)
 
 def is_char(arg):
     return isinstance(arg, str) and len(arg) == 1

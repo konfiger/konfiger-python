@@ -217,7 +217,29 @@ class Konfiger:
         self.konfiger_objects.clear()
         
     def remove(self, key_index):
-        pass
+        if is_string(key_index):
+            self.changes_occur = True
+            if key_index in self.konfiger_objects.keys():
+                enable_cache_ = self.enable_cache_
+                self.enable_cache(False)
+                ret = self.get(key_index)
+                self.enable_cache(enable_cache_)
+                del self.konfiger_objects[key_index]
+                if key_index not in self.konfiger_objects.keys():
+                    return ret
+                return None
+                
+        elif is_number(key_index):
+            if key_index < len(self.konfiger_objects):
+                index = -1
+                for key in self.konfiger_objects.keys():
+                    index = index + 1
+                    if index == key_index:
+                        return self.remove(key)
+                return None
+            
+        else:
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key_index must be a string or number found " + str(type(key_index)))
         
     def update_at(self, index, value):
         pass
@@ -314,11 +336,23 @@ class Konfiger:
         if seperator is None:
             seperator = self.seperator
         
+        stream_ = string_stream(raw_string, delimeter, seperator)
+        while stream_.has_next():
+            obj = stream_.next()
+            self.put_string(obj[0], obj[1])
+        self.changes_occur = True
+        
     def append_file(self, file_path, delimeter=None, seperator=None):
         if delimeter is None:
             delimeter = self.delimeter
         if seperator is None:
             seperator = self.seperator
+        
+        stream_ = file_stream(file_path, delimeter, seperator)
+        while stream_.has_next():
+            obj = stream_.next()
+            self.put_string(obj[0], obj[1])
+        self.changes_occur = True
         
     def resolve(self, obj):
         pass
