@@ -7,7 +7,7 @@
 from .konfiger_stream import file_stream, string_stream
 from .konfiger_util import type_of, is_string, is_char, is_bool, is_number, is_float, is_object, escape_string, un_escape_string
 
-MAX_CAPACITY = 10000000
+GLOBAL_MAX_CAPACITY = 10000000
 
 def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n'):
     kon = from_stream(file_stream(file_path, delimeter, seperator), lazy_load)
@@ -63,15 +63,15 @@ class Konfiger:
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key must be string found " + str(type(key)))
         
     def put_string(self, key, value):
-        global MAX_CAPACITY
+        global GLOBAL_MAX_CAPACITY
         if not is_string(key):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key must be string found " + str(type(key)))
         if not is_string(value):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, value must be string found " + str(type(value)))
             
         if key not in self.konfiger_objects:
-            if len(self.konfiger_objects) >= MAX_CAPACITY:
-                raise TypeError("io.github.thecarisma.konfiger: konfiger has reached it maximum capacity of " + MAX_CAPACITY)
+            if len(self.konfiger_objects) >= GLOBAL_MAX_CAPACITY:
+                raise TypeError("io.github.thecarisma.konfiger: konfiger has reached it maximum capacity of " + GLOBAL_MAX_CAPACITY)
         
         self.konfiger_objects[key] = value
         self.changes_occur = True
@@ -129,7 +129,7 @@ class Konfiger:
                 if entry_key.lower() == key.lower():
                     key = entry_key
                     if self.enable_cache_:
-                        self.shift_cache(key, value)
+                        self.shift_cache(key, entry_value)
                     return entry_value
         
         value = None   
@@ -142,26 +142,26 @@ class Konfiger:
         
         return value
         
-    def get_string(self, key, default_value=None):
+    def get_string(self, key, default_value=""):
         value = self.get(key, default_value)
         return value if value is not None else default_value
         
-    def get_boolean(self, key, default_value=None):
+    def get_boolean(self, key, default_value=False):
         value = self.get(key, default_value)
         return value.lower() == "true" if value is not None else False
         
-    def get_long(self, key, default_value=None):
+    def get_long(self, key, default_value=0):
         value = self.get(key, default_value)
         return int(value) if value is not None else default_value
         
-    def get_int(self, key, default_value=None):
+    def get_int(self, key, default_value=0):
         return self.get_long(key, default_value)
         
-    def get_float(self, key, default_value=None):
+    def get_float(self, key, default_value=0.0):
         value = self.get(key, default_value)
         return float(value) if value is not None else default_value
         
-    def get_double(self, key, default_value=None):
+    def get_double(self, key, default_value=0.0):
         return self.get_float(key, default_value)
         
     def shift_cache(self, key, value):
@@ -222,14 +222,14 @@ class Konfiger:
     def update_at(self, index, value):
         pass
         
-    def size(self):
+    def __len__(self):
         if not self.loading_ends and self.lazy_load:
             self.lazy_loader()
         
         return len(self.konfiger_objects)
         
     def is_empty(self):
-        return self.size() == 0
+        return self.__len__() == 0
         
     def get_seperator(self):
         return self.seperator
@@ -305,14 +305,20 @@ class Konfiger:
             self.put_string(obj[0], obj[1])
         self.loading_ends = True
         
-    def save(file_path=None):
+    def save(self, file_path=None):
         pass
         
-    def append_string(self, raw_string, delimeter, seperator):
-        pass
+    def append_string(self, raw_string, delimeter=None, seperator=None):
+        if delimeter is None:
+            delimeter = self.delimeter
+        if seperator is None:
+            seperator = self.seperator
         
-    def append_file(self, file_path, delimeter, seperator):
-        pass
+    def append_file(self, file_path, delimeter=None, seperator=None):
+        if delimeter is None:
+            delimeter = self.delimeter
+        if seperator is None:
+            seperator = self.seperator
         
     def resolve(self, obj):
         pass

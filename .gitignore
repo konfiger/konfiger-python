@@ -15,3 +15,7 @@
 /pyhton/build/
 /pyhton/dist/
 *__pycache__/
+
+/junk/
+/test/konfiger.conf
+/test/crash_test.js
