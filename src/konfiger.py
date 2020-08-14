@@ -11,7 +11,7 @@ GLOBAL_MAX_CAPACITY = 10000000
 
 def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n'):
     kon = from_stream(file_stream(file_path, delimeter, seperator), lazy_load)
-    kon.filePath = kon.stream.stream_obj
+    kon.file_path = kon.stream.stream_obj
     return kon
 
 def from_string(raw_string, lazy_load=True, delimeter='=', seperator='\n'):
@@ -242,7 +242,18 @@ class Konfiger:
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, key_index must be a string or number found " + str(type(key_index)))
         
     def update_at(self, index, value):
-        pass
+        if is_number(index) and is_string(value):
+            if index < len(self.konfiger_objects):
+                i = -1
+                for key in self.konfiger_objects.keys():
+                    i = i + 1
+                    if i == index:
+                        self.changes_occur = True
+                        self.enable_cache(self.enable_cache_)
+                        self.konfiger_objects[key] = value
+                        break
+        else:
+            raise TypeError("io.github.thecarisma.Konfiger: Invalid argument, expecting the entry (<class 'int'>, <class 'str'>) found (" + str(type(index)) + ", " + str(type(value)) + ")")
         
     def __len__(self):
         if not self.loading_ends and self.lazy_load:
@@ -328,7 +339,13 @@ class Konfiger:
         self.loading_ends = True
         
     def save(self, file_path=None):
-        pass
+        if self.file_path is None and file_path is None:
+            raise TypeError("io.github.thecarisma.Konfiger: The entries cannot be saved you need to specify the file_path as parameter or load Konfiger from a file")
+            
+        if file_path is None:
+            file_path = self.file_path
+        with open(file_path, 'w') as file:
+            file.write(self.__str__())
         
     def append_string(self, raw_string, delimeter=None, seperator=None):
         if delimeter is None:

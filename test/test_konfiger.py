@@ -257,6 +257,25 @@ Number=215415245
         
         self.assertEqual(kon.get("string"), "This is a string")
         self.assertEqual(kon.get("number"), "215415245")
+
+    def test_check_the_update_at_method(self):
+        kon = from_string("Name:Adewale Azeez,//Project:konfiger,Date:April 24 2020", False, ':', ',')
+        
+        self.assertEqual(kon.get("Date"), "April 24 2020")
+        self.assertEqual(kon.get("Name"), "Adewale Azeez")
+        kon.update_at(1, "12 BC")
+        kon.update_at(0, "Thecarisma")
+        self.assertEqual(kon.get("Date"), "12 BC")
+        self.assertEqual(kon.get("Name"), "Thecarisma")
+
+    def test_save_content_and_validate_saved_content(self):
+        kon = from_string("Name=Adewale Azeez,Date=April 24 2020,One=111,Two=222,Three=333", False, '=', ',')
+        
+        self.assertEqual(len(kon), 5)
+        kon.save('test/konfiger.conf')
+        kon2 = from_file('test/konfiger.conf', False, '=', ',')
+        self.assertEqual(str(kon), str(kon))
+        self.assertEqual(len(kon2), 5)
         
 if __name__ == '__main__': 
     unittest.main() 
