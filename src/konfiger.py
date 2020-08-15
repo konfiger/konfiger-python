@@ -372,10 +372,37 @@ class Konfiger:
         self.changes_occur = True
         
     def resolve(self, obj):
-        pass
+        if not is_object(obj):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
+            
+        fields = vars(obj).items()
+        for key, value in fields:
+            if not callable(key) and not key.startswith("__"):
+                find_key = key
+                match_get_key = getattr(obj, "match_get_key", None)
+                if callable(match_get_key):
+                    find_key = match_get_key(key)
+                if self.contains(find_key):
+                    if is_bool(value):
+                        setattr(obj, key, self.get_boolean(find_key))
+                    elif is_float(value):
+                        setattr(obj, key, self.get_float(find_key))
+                    elif is_number(value):
+                        setattr(obj, key, self.get_long(find_key))
+                    else:
+                        setattr(obj, key, self.get(find_key))
         
     def dissolve(self, obj):
-        pass
+        if not is_object(obj):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
+            
+        fields = vars(obj).items()
+        for key, value in fields:
+            if not callable(key) and not key.startswith("__"):
+                find_key = None
+                if True:
+                    find_key = key
+                    self.put_string(find_key, value)
         
     def detach(self):
         pass

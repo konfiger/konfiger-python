@@ -1,4 +1,4 @@
-#!python {0}
+#!python
 
 import unittest 
 import os
