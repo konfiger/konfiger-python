@@ -49,10 +49,7 @@ class Konfiger:
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument expecting boolean found " + str(type(lazy_load)))            
         
     def put(self, key, value):
-        if is_string(key):
-            if self.attached_resolve_obj is not None:
-                pass
-            
+        if is_string(key):            
             if is_string(value):
                 self.put_string(key, value)
             elif is_bool(value):
@@ -74,6 +71,25 @@ class Konfiger:
                 raise TypeError("io.github.thecarisma.konfiger: konfiger has reached it maximum capacity of " + GLOBAL_MAX_CAPACITY)
         
         self.konfiger_objects[key] = value
+        if self.attached_resolve_obj is not None:
+            find_key = None
+            match_put_key = getattr(self.attached_resolve_obj, "match_put_key", None)
+            if callable(match_put_key):
+                find_key = match_put_key(self.attached_resolve_obj, key)
+                if find_key is None:
+                    if hasattr(self.attached_resolve_obj, key):
+                        find_key = key
+            if find_key is not None:
+                field = getattr(self.attached_resolve_obj, find_key, None)
+                if not callable(field):
+                    if is_string(field):
+                        setattr(self.attached_resolve_obj, find_key, value)
+                    elif is_bool(field):
+                        setattr(self.attached_resolve_obj, find_key, value.lower() == "true")
+                    elif is_float(field):
+                        setattr(self.attached_resolve_obj, find_key, float(value))
+                    elif is_number(field):
+                        setattr(self.attached_resolve_obj, find_key, int(value))
         self.changes_occur = True
         if self.enable_cache_:
             self.shift_cache(key, value)
@@ -375,22 +391,25 @@ class Konfiger:
         if not is_object(obj):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
             
+        self.attached_resolve_obj = obj
         fields = vars(obj).items()
         for key, value in fields:
             if not callable(key) and not key.startswith("__"):
                 find_key = key
                 match_get_key = getattr(obj, "match_get_key", None)
                 if callable(match_get_key):
-                    find_key = match_get_key(key)
+                    find_key = match_get_key(obj, key)
+                    if find_key is None:
+                        find_key = key
                 if self.contains(find_key):
-                    if is_bool(value):
+                    if is_string(value):
+                        setattr(obj, key, self.get(find_key))
+                    elif is_bool(value):
                         setattr(obj, key, self.get_boolean(find_key))
                     elif is_float(value):
                         setattr(obj, key, self.get_float(find_key))
                     elif is_number(value):
                         setattr(obj, key, self.get_long(find_key))
-                    else:
-                        setattr(obj, key, self.get(find_key))
         
     def dissolve(self, obj):
         if not is_object(obj):
@@ -399,10 +418,21 @@ class Konfiger:
         fields = vars(obj).items()
         for key, value in fields:
             if not callable(key) and not key.startswith("__"):
-                find_key = None
-                if True:
-                    find_key = key
-                    self.put_string(find_key, value)
+                find_key = key
+                match_get_key = getattr(obj, "match_get_key", None)
+                if callable(match_get_key):
+                    find_key = match_get_key(obj, key)
+                    if find_key is None:
+                        find_key = key
+                if find_key is not None:
+                    self.put_string(find_key, str(value))
         
     def detach(self):
-        pass
+        tmp_obj = self.attached_resolve_obj
+        self.attached_resolve_obj = None
+        return tmp_obj
+
+
+
+
+
