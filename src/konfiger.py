@@ -9,6 +9,20 @@ from .konfiger_util import type_of, is_string, is_char, is_bool, is_number, is_f
 
 GLOBAL_MAX_CAPACITY = 10000000
 
+def konfiger_values(argument):
+    def match_get_key(self, key):
+        for inkey, value in argument.items():
+            if value == key:
+                return inkey
+    def match_put_key(self, key):
+        if key in argument.keys():
+            return argument[key]
+    def mutated_class(klazz):
+        setattr(klazz, "match_get_key", match_get_key)
+        setattr(klazz, "match_put_key", match_put_key)
+        return klazz
+    return mutated_class
+
 def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n'):
     kon = from_stream(file_stream(file_path, delimeter, seperator), lazy_load)
     kon.file_path = kon.stream.stream_obj
@@ -431,8 +445,6 @@ class Konfiger:
         tmp_obj = self.attached_resolve_obj
         self.attached_resolve_obj = None
         return tmp_obj
-
-
 
 
 

@@ -4,7 +4,7 @@ import unittest
 import os
 import sys
 sys.path.insert(0, os.getcwd())
-from src import from_file, from_string, from_stream, file_stream, string_stream
+from src import from_file, from_string, from_stream, file_stream, string_stream, konfiger_values
 
 class TextsFlat:
     project = ""
@@ -33,8 +33,31 @@ class Texts:
             return "author"
         elif key == "File":
             return "file"
+
+@konfiger_values({
+    "Project": "project",
+    "Author": "author",
+    "File": "file"
+})
+class DecoratedTexts:
+    project = ""
+    Platform = ""
+    file = ""
+    author = ""
             
 class Entries:
+    project = "konfiger"
+    author = "Adewale Azeez"
+    platform = "Cross Platform"
+    file = "test.comment.inf"
+      
+@konfiger_values({
+    "Project": "project",
+    "Author": "author",
+    "Platform": "platform",
+    "File": "file"
+})      
+class DecoratedEntries:
     project = "konfiger"
     author = "Adewale Azeez"
     platform = "Cross Platform"
@@ -123,6 +146,29 @@ class TestKonfigerResolve(unittest.TestCase):
         self.assertEqual("Raspberry" in texts.Platform, True)
         self.assertEqual(texts.author, "Thecarisma")
 
+    def test_resolve_with_changing_values_and_map_key_with_match_put_key_using_decorator(self):
+        kstream = file_stream('test/test.comment.inf')
+        kstream.set_comment_prefix("[")
+        kon = from_stream(kstream)
+        texts = DecoratedTexts
+        kon.resolve(texts)
+        
+        self.assertEqual(texts.project, "konfiger")
+        self.assertEqual(texts.Platform, "Cross Platform")
+        self.assertEqual(texts.file, "test.comment.inf")
+        self.assertEqual(texts.author, "Adewale Azeez")
+        
+        kon.put("Project", "konfiger-nodejs")
+        kon.put("Platform", "Windows, Linux, Mac, Raspberry")
+        kon.put("author", "Thecarisma")
+        
+        self.assertEqual(texts.project, "konfiger-nodejs")
+        self.assertEqual("Windows" in texts.Platform, True)
+        self.assertEqual("Linux" in texts.Platform, True)
+        self.assertEqual("Mac" in texts.Platform, True)
+        self.assertEqual("Raspberry" in texts.Platform, True)
+        self.assertEqual(texts.author, "Thecarisma")
+
     def test_dissolve_an_object_into_konfiger(self):
         kon = from_string("")
         kon.dissolve(Entries)
@@ -131,6 +177,15 @@ class TestKonfigerResolve(unittest.TestCase):
         self.assertEqual(kon.get("platform"), "Cross Platform")
         self.assertEqual(kon.get("file"), "test.comment.inf")
         self.assertEqual(kon.get("author"), "Adewale Azeez")
+
+    def test_dissolve_an_object_into_konfiger_using_decorator(self):
+        kon = from_string("")
+        kon.dissolve(DecoratedEntries)
+        
+        self.assertEqual(kon.get("Project"), "konfiger")
+        self.assertEqual(kon.get("Platform"), "Cross Platform")
+        self.assertEqual(kon.get("File"), "test.comment.inf")
+        self.assertEqual(kon.get("Author"), "Adewale Azeez")
 
     def test_detach_an_object_from_konfiger(self):
         kstream = file_stream('test/test.comment.inf')
