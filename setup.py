@@ -4,6 +4,9 @@ from setuptools import setup, find_packages
 setup(
     name = 'konfiger',
 	packages = ['konfiger'],
+    package_dir = {
+        'konfiger': 'src'
+    },
 	include_package_data=True,
 	version = '1.2.4',
 	platforms='any',
