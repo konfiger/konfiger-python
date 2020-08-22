@@ -458,7 +458,7 @@ If your entry keys is the same as the object keys you don't need to declare the 
 
 ### Initialization
 
-The main Konfiger contructor is not exported from the package, the two functions are exported for initialization, `from_string` and `from_file`. The from_string function creates a Konfiger object from a string with valid key value entry or from empty string, the from_file function creates the Konfiger object from a file, the two functions accept a cumpulsory second parameter `lazyLoad` which indicates whether to read all the entry from the file or string suring initialization. The lazyLoad parameter is useful for progressively read entries from a large file. The two initializing functions also take 2 extra optional parameters `delimeter` and `seperator`. If the third and fourth parameter is not specified the default is used, delimeter = `=""", seperator = `\n`. If the file or string has different delimeter and seperator always send the third and fourth parameter.
+The main Konfiger contructor is not exported from the package, the two functions are exported for initialization, `from_string` and `from_file`. The from_string function creates a Konfiger object from a string with valid key value entry or from empty string, the from_file function creates the Konfiger object from a file, the two functions accept a cumpulsory second parameter `lazyLoad` which indicates whether to read all the entry from the file or string suring initialization. The lazyLoad parameter is useful for progressively read entries from a large file. The two initializing functions also take 2 extra optional parameters `delimeter` and `seperator`. If the third and fourth parameter is not specified the default is used, delimeter = `=`, seperator = `\n`. If the file or string has different delimeter and seperator always send the third and fourth parameter.
 
 The following initializer progressively read the file when needed
 
@@ -512,7 +512,7 @@ konfiger.put("Boolean", True)
 konfiger.put("Float", 12.345)
 ```
 
-The `put` method do a type check on the value and calls the appropriate put method e.g `konfiger.put("Boolean", True)` will result in a call to `konfiger.put_boolean("Boolean", True)`. The following method are avaliable to directly add the value according to the type, `put_string""", `put_boolean""", `put_long` and `putInt`. The previous example can be re-written as:
+The `put` method do a type check on the value and calls the appropriate put method e.g `konfiger.put("Boolean", True)` will result in a call to `konfiger.put_boolean("Boolean", True)`. The following method are avaliable to directly add the value according to the type, `put_string`, `put_boolean`, `put_long` and `putInt`. The previous example can be re-written as:
 
 ```python
 konfiger.put_string("String", "This is a string")
@@ -529,7 +529,7 @@ There are various ways to get the value from the konfiger object, the main `get`
 konfiger.get("String")
 ```
 
-To get specific type from the object use the following methods, `get_string""", `get_boolean""", `get_long""", `get_float` and `getInt`. 
+To get specific type from the object use the following methods, `get_string`, `get_boolean`, `get_long`, `get_float` and `getInt`. 
 
 ```python
 konfiger.get_string("String")
