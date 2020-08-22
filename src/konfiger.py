@@ -5,7 +5,7 @@
 """
 
 from .konfiger_stream import file_stream, string_stream
-from .konfiger_util import type_of, is_string, is_char, is_bool, is_number, is_float, is_object, escape_string, un_escape_string
+from .konfiger_util import type_of, is_string, is_char, is_bool, is_number, is_float, escape_string, un_escape_string
 
 GLOBAL_MAX_CAPACITY = 10000000
 
@@ -89,7 +89,7 @@ class Konfiger:
             find_key = None
             match_put_key = getattr(self.attached_resolve_obj, "match_put_key", None)
             if callable(match_put_key):
-                find_key = match_put_key(self.attached_resolve_obj, key)
+                find_key = match_put_key(key)
                 if find_key is None:
                     if hasattr(self.attached_resolve_obj, key):
                         find_key = key
@@ -402,17 +402,18 @@ class Konfiger:
         self.changes_occur = True
         
     def resolve(self, obj):
-        if not is_object(obj):
+        if is_string(obj) or is_number(obj) or is_bool(obj) or is_char(obj):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
             
         self.attached_resolve_obj = obj
-        fields = vars(obj).items()
-        for key, value in fields:
+        fields = dir(obj)
+        for key in fields:
+            value = getattr(obj, key)
             if not callable(key) and not key.startswith("__"):
                 find_key = key
                 match_get_key = getattr(obj, "match_get_key", None)
                 if callable(match_get_key):
-                    find_key = match_get_key(obj, key)
+                    find_key = match_get_key(key)
                     if find_key is None:
                         find_key = key
                 if self.contains(find_key):
@@ -426,20 +427,26 @@ class Konfiger:
                         setattr(obj, key, self.get_long(find_key))
         
     def dissolve(self, obj):
-        if not is_object(obj):
+        if is_string(obj) or is_number(obj) or is_bool(obj) or is_char(obj):
             raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
             
-        fields = vars(obj).items()
-        for key, value in fields:
+        fields = dir(obj)
+        for key in fields:
+            value = getattr(obj, key)
             if not callable(key) and not key.startswith("__"):
                 find_key = key
                 match_get_key = getattr(obj, "match_get_key", None)
                 if callable(match_get_key):
-                    find_key = match_get_key(obj, key)
+                    find_key = match_get_key(key)
                     if find_key is None:
                         find_key = key
                 if find_key is not None:
                     self.put_string(find_key, str(value))
+        
+    def attach(self, obj):
+        if is_string(obj) or is_number(obj) or is_bool(obj) or is_char(obj):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, the parameter must be a class object found " + str(type(obj)))
+        self.attached_resolve_obj = obj
         
     def detach(self):
         tmp_obj = self.attached_resolve_obj

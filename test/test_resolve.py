@@ -103,7 +103,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
-        texts_flat = TextsFlat
+        texts_flat = TextsFlat()
         kon.resolve(texts_flat)
         
         self.assertEqual(texts_flat.project, "")
@@ -115,7 +115,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
-        texts = Texts
+        texts = Texts()
         kon.resolve(texts)
         
         self.assertEqual(texts.project, "konfiger")
@@ -127,7 +127,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
-        texts = Texts
+        texts = Texts()
         kon.resolve(texts)
         
         self.assertEqual(texts.project, "konfiger")
@@ -150,7 +150,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
-        texts = DecoratedTexts
+        texts = DecoratedTexts()
         kon.resolve(texts)
         
         self.assertEqual(texts.project, "konfiger")
@@ -171,7 +171,7 @@ class TestKonfigerResolve(unittest.TestCase):
 
     def test_dissolve_an_object_into_konfiger(self):
         kon = from_string("")
-        kon.dissolve(Entries)
+        kon.dissolve(Entries())
         
         self.assertEqual(kon.get("project"), "konfiger")
         self.assertEqual(kon.get("platform"), "Cross Platform")
@@ -180,7 +180,7 @@ class TestKonfigerResolve(unittest.TestCase):
 
     def test_dissolve_an_object_into_konfiger_using_decorator(self):
         kon = from_string("")
-        kon.dissolve(DecoratedEntries)
+        kon.dissolve(DecoratedEntries())
         
         self.assertEqual(kon.get("Project"), "konfiger")
         self.assertEqual(kon.get("Platform"), "Cross Platform")
@@ -191,7 +191,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
-        texts = Texts
+        texts = Texts()
         kon.resolve(texts)
         
         self.assertEqual(texts.project, "konfiger")
@@ -213,7 +213,7 @@ class TestKonfigerResolve(unittest.TestCase):
 
     def test_resolve_with_matchGetKey_function_mixed_types(self):
         kon = from_file('test/mixed.types')
-        mixedTypes = MixedTypes
+        mixedTypes = MixedTypes()
         kon.resolve(mixedTypes)
         
         self.assertEqual(mixedTypes.project, "konfiger")
@@ -247,7 +247,7 @@ class TestKonfigerResolve(unittest.TestCase):
 
     def test_resolve_with_changing_values_for_mixed_types(self):
         kon = from_file('test/mixed.types')
-        mixedTypes = MixedTypes
+        mixedTypes = MixedTypes()
         kon.resolve(mixedTypes)
         
         self.assertEqual(mixedTypes.project, "konfiger")
@@ -270,6 +270,29 @@ class TestKonfigerResolve(unittest.TestCase):
 
         kon.put("AnnotatedEntry", True)
         self.assertEqual(mixedTypes.annotatedEntry, True)
+
+    def test_resolve_with_changing_values_and_map_key_with_match_put_key(self):
+        kstream = file_stream('test/test.comment.inf')
+        kstream.set_comment_prefix("[")
+        kon = from_stream(kstream)
+        texts = Texts()
+        kon.attach(texts)
+        
+        self.assertNotEqual(texts.project, "konfiger")
+        self.assertNotEqual(texts.Platform, "Cross Platform")
+        self.assertNotEqual(texts.file, "test.comment.inf")
+        self.assertNotEqual(texts.author, "Adewale Azeez")
+        
+        kon.put("Project", "konfiger-nodejs")
+        kon.put("Platform", "Windows, Linux, Mac, Raspberry")
+        kon.put("author", "Thecarisma")
+        
+        self.assertEqual(texts.project, "konfiger-nodejs")
+        self.assertEqual("Windows" in texts.Platform, True)
+        self.assertEqual("Linux" in texts.Platform, True)
+        self.assertEqual("Mac" in texts.Platform, True)
+        self.assertEqual("Raspberry" in texts.Platform, True)
+        self.assertEqual(texts.author, "Thecarisma")
         
 if __name__ == '__main__': 
     unittest.main() 
