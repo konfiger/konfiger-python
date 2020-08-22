@@ -1,4 +1,4 @@
-# {::nomarkdown}<p style="text-align: center;" align="center"><img src="https://github.com/konfiger/konfiger.github.io/raw/master/icons/konfiger-nodejs.png" alt="konfiger-nodejs" style="width:180px;height:160px;" width="180" height="160" /><br /> konfiger-nodejs</p>{:/}
+# {::nomarkdown}<p style="text-align: center;" align="center"><img src="https://github.com/konfiger/konfiger.github.io/raw/master/icons/konfiger-python.png" alt="konfiger-python" style="width:180px;height:160px;" width="180" height="160" /><br /> konfiger-python</p>{:/}
 
 <p style="text-align: center;" align="center">Light weight package to manage key value based configuration and data files.</p>
 
@@ -23,8 +23,8 @@ ___
     - [Dissolve Object](#dissolve-object)
     - [Multiline value](#multiline-value)
 - [Native Object Attachement](#native-object-attachement)
-    - [matchGetKey](#matchgetkey)
-    - [matchPutKey](#matchputkey)
+    - [match_get_key](#matchgetkey)
+    - [match_put_key](#matchputkey)
 - [API Documentations](#api-documentations)
     - [KonfigerStream](#konfigerstream)
     - [Konfiger](#konfiger)
@@ -44,24 +44,20 @@ ___
 
 ## Installation
 
-Module name on npm and bower is konfiger.
+Module name on PyPi is konfiger.
 
-Using npm:
+Using pip:
 
 ```bash
-npm install konfiger
+pip install konfiger
 ```
 
-Using bower:
+Installing from source:
 
 ```bash
-bower install konfiger
-```
-
-Using yarn:
-
-```bash
-yarn add konfiger
+git clone https://github.com/konfiger/konfiger-python.git
+cd konfiger-python
+pip install .
 ```
 
 ## Examples
@@ -70,69 +66,69 @@ yarn add konfiger
 
 The following example load from file, add an entry, remove an entry and iterate all the key value entries
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-//initialize the key-value from file
-var konfiger = Konfiger.fromFile('test/test.config.ini', true)
+#initialize the key-value from file
+kon = from_file('test/test.config.ini', True)
 
-//add a string
-konfiger.putString("Greet", "Hello World")
+#add a string
+kon.put_string("Greet", "Hello World")
 
-//get an object
-console.log(konfiger.get("Greet"))
+#get an object
+print(kon.get("Greet"))
 
-//remove an object
-konfiger.remove("Greet")
+#remove an object
+kon.remove("Greet")
 
-//add an String
-konfiger.putString("What", "i don't know what to write here");
+#add an String
+kon.put_string("What", "i don't know what to write here");
 
-for (var entry of konfiger.entries()) {
-	console.log(entry)
-}
+for key, value in kon.entries():
+    print('[' + key + ', ' + value + ']')
 ```
 
 ### Write to disk
 
 Initialize an empty konfiger object and populate it with random data, then save it to a file
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
+import random
 
-let randomValues = [ 'One', 'Two', 'Three', 'Four', 'Five' ]
-var konfiger = Konfiger.fromString("", false)
+random_values = [ 'One', 'Two', 'Three', 'Four', 'Five' ]
+kon = from_string("", False)
 
-for (var i = 0; i < 200; ++i) {
-    var random = Math.floor(Math.random() * (randomValues.length - 1) + 0)
-    konfiger.putString(''+i, randomValues[random])
-}
-konfiger.save('test/konfiger.conf')
+for i in range(200):
+    rand = random.randint(0, len(random_values) - 1)
+    kon.put_string(str(i), random_values[rand])
+    
+kon.save('test/konfiger.conf')
 ```
 
 ### Get Types
 
-Load the entries as string and get them as a true type.
+Load the entries as string and get them as a True type.
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
 
-var konfiger = Konfiger.fromString(`
+kon = from_string("""
 String=This is a string
 Number=215415245
 Float=56556.436746
-Boolean=true
-`, false)
+Boolean=True
+""", False)
 
-var str = konfiger.getString("String")
-var num = konfiger.getLong("Number")
-var flo = konfiger.getFloat("Float")
-var bool = konfiger.getBoolean("Boolean")
+str_ = kon.get_string("String")
+num_ = kon.get_long("Number")
+flo_ = kon.get_float("Float")
+bool_ = kon.get_boolean("Boolean")
 
-console.log(typeof str)
-console.log(typeof num)
-console.log(typeof flo)
-console.log(typeof bool)
+print(type(str_))
+print(type(num_))
+print(type(flo_))
+print(type(bool_))
 ```
 
 ### Lazy Loading
@@ -149,148 +145,144 @@ Fours=444444444444
 Fives=5555555555555
 ```
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-let konfiger = Konfiger.fromFile('test/konfiger.conf', //the file pth
-                                true //lazyLoad true
-                                )
-//at this point nothing is read from the file
+kon = from_file('test/konfiger.conf', #the file pth
+                        True #lazyLoad True
+                        )
+#at this point nothing is read from the file
 
-//the size of konfiger is 0 even if the file contains over 1000 entries
+#the size of konfiger is 0 even if the file contains over 1000 entries
 
-//the key 'Twos' is at the second line in the file, therefore two entry has 
-//been read to get the value.
-console.log(konfiger.get("Twos"))
+#the key 'Twos' is at the second line in the file, therefore two entry has 
+#been read to get the value.
+print(kon.get("Twos"))
 
-//the size becomes 2, 
+#the size becomes 2,
 
-//to read all the entries simply call the toString() method
-console.log(konfiger.toString())
+#to read all the entries simply call the toString() method
+print(str(kon))
 
-//now the size is equal to the entry
-console.log(konfiger.size())
+#now the size is equal to the entry
+print(len(kon))
 ```
 
 ### Seperator and delimeter
 
 Initailize a konfiger object with default seperator and delimeter then change the seperator and selimeter at runtime
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-let konfiger = Konfiger.fromFile('test/konfiger.conf', false)
-konfiger.setDelimeter('?')
-konfiger.setSeperator(',')
+kon = from_file('test/konfiger.conf', False)
+kon.set_delimeter('?')
+kon.set_seperator(',')
 
-console.log(konfiger.toString())
+print(str(kon))
 ```
 
 ### Read file with Stream
 
-Read a key value file using the progressive [KonfigerStream](https://github.com/konfiger/konfiger-nodejs/blob/master/src/io/github/thecarisma/KonfigerStream.js), each scan returns the current key value array `[ 'key', 'value']`
+Read a key value file using the progressive [KonfigerStream](https://github.com/konfiger/konfiger-python/blob/master/src/konfiger_stream.py), each scan returns the current key value array `('key', 'value')`
 
-```js
-const { KonfigerStream } = require("konfiger")
+```python
+from konfiger import file_stream
 
-var kStream = KonfigerStream.fileStream('test/konfiger.conf')
-while (kStream.hasNext()) {
-    let entry = kStream.next()
-    console.log(entry)
-}
+k_stream = file_stream('test/konfiger.conf')
+while (k_stream.has_next()):
+    entry = k_stream.next()
+    print(entry)
 ```
 
 ### Read String with Stream
 
-Read a key value string using the progressive [KonfigerStream](https://github.com/konfiger/konfiger-nodejs/blob/master/src/io/github/thecarisma/KonfigerStream.js), each scan returns the current key value array `[ 'key', 'value']`
+Read a key value string using the progressive [KonfigerStream](https://github.com/konfiger/konfiger-python/blob/master/src/konfiger_stream.py), each scan returns the current key value array `('key', 'value')`
 
-```js
-const { KonfigerStream } = require("konfiger")
+```python
+from konfiger import string_stream
 
-var kStream = KonfigerStream.stringStream(`
+k_stream = string_stream("""
 String=This is a string
 Number=215415245
 Float=56556.436746
-Boolean=true
-`)
+Boolean=True
+""")
 
-while (kStream.hasNext()) {
-    let entry = kStream.next()
-    console.log(entry)
-}
+while (k_stream.has_next()):
+    entry = k_stream.next()
+    print(entry)
 ```
 
 ### Skip Comment entries
 
 Read all the key value entry using the stream and skipping all commented entries. The default comment prefix is `//` but in the example below the commented entries starts with `#` so the prefix is changed. The same thing happen if the key value entry is loaded from file. 
 
-```js
-const { KonfigerStream } = require("konfiger")
+```python
+from konfiger import string_stream
 
-var kStream = KonfigerStream.stringStream(`
+k_stream = string_stream("""
 String=This is a string
 #Number=215415245
 Float=56556.436746
-#Boolean=true
-`)
-kStream.setCommentPrefix("#")
+#Boolean=True
+""")
+k_stream.set_comment_prefix("#")
 
-while (kStream.hasNext()) {
-    let entry = kStream.next()
-    console.log(entry)
-}
+while (k_stream.has_next()):
+    entry = k_stream.next()
+    print(entry)
 ```
 
 ### Resolve Object
 
-The example below attach a javascript object to a konfiger object, whenever the value of the konfiger object changes the attached object entries is also updated.
+The example below attach a python object to a konfiger object, whenever the value of the konfiger object changes the attached object entries is also updated.
 
 For the file properties.conf
 
 ```
 project = konfiger
 author = Adewale Azeez
-islibrary = true
+islibrary = True
 ```
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-var properties = {
-    project: "",
-    author: "",
-    islibrary: false
-}
+class Properties:
+    project = ""
+    author = ""
+    islibrary = False
 
-var kon = Konfiger.fromFile('properties.conf')
+kon = from_file('properties.conf')
+properties = Properties()
 kon.resolve(properties)
 
-console.log(properties.project) // konfiger
-console.log(properties.author) // Adewale Azeez
-console.log(properties.islibrary) // true
-kon.put("project", "konfiger-nodejs")
-console.log(properties.project) // konfiger-nodejs
+print(properties.project) # konfiger
+print(properties.author) # Adewale Azeez
+print(properties.islibrary) # True
+kon.put("project", "konfiger-python")
+print(properties.project) # konfiger-python
 ```
 
 ### Dissolve Object
 
-The following snippet reads the value of a javascript object into the konfiger object, the object is not attached to konfiger unlike resolve function.
+The following snippet reads the value of a python object into the konfiger object, the object is not attached to konfiger unlike resolve function.
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
 
-var properties = {
-    project: "konfiger",
-    author: "Adewale",
-    islibrary: true
-}
+class Properties:
+    project = "konfiger"
+    author = "Adewale"
+    islibrary = True
 
-var kon = Konfiger.fromString('')
-kon.dissolve(properties)
+kon = from_string('')
+kon.dissolve(Properties())
 
-console.log(kon.get("project")) // konfiger
-console.log(kon.get("author")) // Adewale Azeez
-console.log(kon.getBoolean("islibrary")) // islibrary
+print(kon.get("project")) # konfiger
+print(kon.get("author")) # Adewale Azeez
+print(kon.get_boolean("islibrary")) # True
 ```
 
 ### Multiline value
@@ -306,22 +298,22 @@ Description = This project is the closest thing to Android +
 ProjectName = konfiger
 ```
 
-```js
-const { KonfigerStream } = require("konfiger")
+```python
+from konfiger import file_stream
 
-var ks = KonfigerStream.fileStream("test.contd.conf")
-ks.setContinuationChar('+')
-console.log(ks.next()[1])
-console.log(ks.next()[1])
+ks = file_stream("test.contd.conf")
+ks.set_continuation_char('+')
+print(ks.next()[1])
+print(ks.next()[1])
 ```
 
 ## Native Object Attachement
 
-This feature of the project allow seamless integration with the konfiger entries by eliminating the need for writing `Konfiger.get*("")` everytime to read a value into a variable or writing lot of `Konfiger.put*()` to add an entry. 
+This feature of the project allow seamless integration with the konfiger entries by eliminating the need for writing `get*("")` everytime to read a value into a variable or writing lot of `put*()` to add an entry. 
 
-The two function `resolve` is used to attach an object. resolve function integrate the object such that the entries in konfiger will be assigned to the matching key in the object. See the [resolve](#object-attachement-get) and [dissolve](#object-attachement-put) examples above.
+The two function `resolve` is used to attach an object. resolve function integrate the object such that the entries in konfiger will be assigned to the matching key in the object. See the [resolve](#resolve-object) and [dissolve](#dissolve-object) examples above.
 
-In a case where the object keys are different from the entries keys in the konfiger object the function `matchGetKey` can be declared in the object to match the key when setting the object entries values, and the function `matchPutKey` is called when setting the konfiger entries from the object.
+In a case where the object keys are different from the entries keys in the konfiger object the function `match_get_key` can be declared in the object to match the key when setting the object entries values, and the function `match_put_key` is called when setting the konfiger entries from the object.
 
 Konfiger is aware of the type of an object field, if the type of a field is boolean the entry value will be parsed as boolean and assigned to the field.
 
@@ -331,127 +323,128 @@ For the file English.lang
 LoginTitle = Login Page
 AgeInstruction = You must me 18 years or above to register
 NewsletterOptin = Signup for our weekly news letter
-ShouldUpdate = true
+ShouldUpdate = True
 ```
 
-For an object which as the same key as the konfiger entries above there is no need to declare the matchGetKey or matchPutKey in the object. Resolve example
+For an object which as the same key as the konfiger entries above there is no need to declare the match_get_key or match_put_key in the object. Resolve example
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-var pageProps = {
-    LoginTitle: "",
-    AgeInstruction: "",
-    NewsletterOptin: "",
-    ShouldUpdate: false
-}
+class PageProps:
+    LoginTitle = ""
+    AgeInstruction = ""
+    NewsletterOptin = ""
+    ShouldUpdate = False
 
-var kon = Konfiger.fromFile('English.lang')
-kon.resolve(pageProps)
-console.log(pageProps)
+    def __str__(self):
+        return "LoginTitle=" + self.LoginTitle + ",AgeInstruction=" + self.AgeInstruction + ",NewsletterOptin=" + self.NewsletterOptin + ",ShouldUpdate=" + str(self.ShouldUpdate)
+
+kon = from_file('English.lang')
+page_props = PageProps()
+kon.resolve(page_props)
+print(page_props)
 ```
 
 Dissolve example
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
 
-var pageProps = {
-    LoginTitle: "Login Page",
-    AgeInstruction: "You must me 18 years or above to register",
-    NewsletterOptin: "Signup for our weekly news letter",
-    ShouldUpdate: true
-}
+class PageProps:
+    LoginTitle = "Login Page"
+    AgeInstruction = "You must me 18 years or above to register"
+    NewsletterOptin = "Signup for our weekly news letter"
+    ShouldUpdate = True
 
-var kon = Konfiger.fromString('')
-kon.dissolve(pageProps)
-console.log(kon.toString())
+kon = from_string('')
+kon.dissolve(PageProps())
+print(str(kon))
 ```
 
-### matchGetKey
+### match_get_key
 
-If the identifier in the object keys does not match the above entries key the object will not be resolved. For example loginTitle does not match LoginTitle, the matchGetKey can be used to map the variable key to the konfiger entry key. The following example map the object key to konfiger entries key.
+If the identifier in the object keys does not match the above entries key the object will not be resolved. For example loginTitle does not match LoginTitle, the match_get_key can be used to map the variable key to the konfiger entry key. The following example map the object key to konfiger entries key.
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_file
 
-var pageProps = {
-    loginTitle: "",
-    ageInstruct: "",
-    NewsletterOptin: "",
-    matchGetKey: function(key) {
-        switch (key) {
-            case "loginTitle":
-                return "LoginTitle"
-            case "ageInstruct":
-                return "AgeInstruction"
-        }
-    }
-}
+class PageProps:
+    loginTitle = ""
+    ageInstruct = ""
+    NewsletterOptin = ""
+    
+    def match_get_key(self, key):
+        if key == "loginTitle":
+            return "LoginTitle"
+        elif key == "ageInstruct":
+            return "AgeInstruction"
+            
+    def __str__(self):
+        return "loginTitle=" + self.loginTitle + ",ageInstruct=" + self.ageInstruct + ",NewsletterOptin=" + self.NewsletterOptin
 
-var kon = Konfiger.fromFile('English.lang')
-kon.resolve(pageProps)
-console.log(pageProps)
+kon = from_file('English.lang')
+page_props = PageProps()
+kon.resolve(page_props)
+print(page_props)
 ```
 
-The way the above code snippet works is that when iterating the object keys if check if the function matchGetKey is present in the object if it is present the key is sent as parameter to the matchGetKey and the returned value is used to get the value from konfiger, if the matchGetKey does not return anything the object key is used to get the value from konfiger (as in the case of NewsletterOptin).
+The way the above code snippet works is that when iterating the object keys if check if the function match_get_key is present in the object if it is present the key is sent as parameter to the match_get_key and the returned value is used to get the value from konfiger, if the match_get_key does not return anything the object key is used to get the value from konfiger (as in the case of NewsletterOptin).
 
 > During the resolve or dissolve process if the entry value is function it is skipped even if it key matches
 
-For dissolving an object the method matchGetKey is invoked to find the actual key to use to add the entry in konfiger, if the object does not declare the matchGetKey function the entries will be added to konfiger as it is declared. The following example similar to the one above but dissolves an object into konfiger.
+For dissolving an object the method match_get_key is invoked to find the actual key to use to add the entry in konfiger, if the object does not declare the match_get_key function the entries will be added to konfiger as it is declared. The following example similar to the one above but dissolves an object into konfiger.
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
 
-var pageProps = {
-    loginTitle: "Login Page",
-    ageInstruct: "You must me 18 years or above to register",
-    NewsletterOptin: "Signup for our weekly news letter",
-    matchGetKey: function(key) {
-        switch (key) {
-            case "loginTitle":
-                return "LoginTitle"
-            case "ageInstruct":
-                return "AgeInstruction"
-        }
-    }
-}
+class PageProps:
+    loginTitle = "Login Page"
+    ageInstruct = "You must me 18 years or above to register"
+    NewsletterOptin = "Signup for our weekly news letter"
+    
+    def match_get_key(self, key):
+        if key == "loginTitle":
+            return "LoginTitle"
+        elif key == "ageInstruct":
+            return "AgeInstruction"
+            
+    def __str__(self):
+        return "loginTitle=" + self.loginTitle + ",ageInstruct=" + self.ageInstruct + ",NewsletterOptin=" + self.NewsletterOptin
 
-var kon = Konfiger.fromString()
-kon.dissolve(pageProps)
-console.log(kon.toString())
+kon = from_string('')
+kon.dissolve(PageProps())
+print(str(kon))
 ```
 
-### matchPutKey
+### match_put_key
 
-The matchPutKey is invoked when an entry value is changed or when a new entry is added to konfiger. The matchPutKey is invoked with the new entry key and checked in the object matchPutKey (if decalred), the returned value is what is set in the object. E.g. if an entry `[Name, Thecarisma]` is added to konfiger the object matchPutKey is invoked with the parameter `Name` the returned value is used to set the corresponding object entry. 
+The match_put_key is invoked when an entry value is changed or when a new entry is added to konfiger. The match_put_key is invoked with the new entry key and checked in the object match_put_key (if decalred), the returned value is what is set in the object. E.g. if an entry `[Name, Thecarisma]` is added to konfiger the object match_put_key is invoked with the parameter `Name` the returned value is used to set the corresponding object entry. 
 
-```js
-const { Konfiger } = require("konfiger")
+```python
+from konfiger import from_string
 
-var pageProps = {
-    loginTitle: "",
-    ageInstruct: "",
-    NewsletterOptin: "",
-    matchPutKey: function(key) {
-        switch (key) {
-            case "LoginTitle":
-                return "loginTitle"
-            case "AgeInstruction":
-                return "ageInstruct"
-        }
-    }
-}
+class PageProps:
+    loginTitle = ""
+    ageInstruct = ""
+    NewsletterOptin = ""
+    
+    def match_put_key(self, key):
+        if key == "LoginTitle":
+            return "loginTitle"
+        elif key == "AgeInstruction":
+            return "ageInstruct"
 
-var kon = Konfiger.fromString('')
-kon.resolve(pageProps)
+kon = from_string('')
+page_props = PageProps()
+kon.resolve(page_props)
 
 kon.put("LoginTitle", "Login Page")
 kon.put("AgeInstruction", "You must me 18 years or above to register")
 kon.put("NewsletterOptin", "Signup for our weekly news letter")
-console.log(pageProps.loginTitle)
-console.log(pageProps.ageInstruct)
-console.log(pageProps.NewsletterOptin)
+print(page_props.loginTitle)
+print(page_props.ageInstruct)
+print(page_props.NewsletterOptin)
 ```
 
 Konfiger does not create new entry in an object it just set existing values. Konfiger only change the value in an object if the key is defined
@@ -459,49 +452,49 @@ Konfiger does not create new entry in an object it just set existing values. Kon
 > Warning!!!
 The values resolved is not typed so if the entry initial value is an integer the resolved value will be a string. All resolved value is string, you will need to do the type conversion by your self.
 
-If your entry keys is the same as the object keys you don't need to declare the matchGetKey or matchPutKey function in the object.
+If your entry keys is the same as the object keys you don't need to declare the match_get_key or match_put_key function in the object.
 
 ## Usage
 
 ### Initialization
 
-The main Konfiger contructor is not exported from the package, the two functions are exported for initialization, `fromString` and `fromFile`. The fromString function creates a Konfiger object from a string with valid key value entry or from empty string, the fromFile function creates the Konfiger object from a file, the two functions accept a cumpulsory second parameter `lazyLoad` which indicates whether to read all the entry from the file or string suring initialization. The lazyLoad parameter is useful for progressively read entries from a large file. The two initializing functions also take 2 extra optional parameters `delimeter` and `seperator`. If the third and fourth parameter is not specified the default is used, delimeter = `=`, seperator = `\n`. If the file or string has different delimeter and seperator always send the third and fourth parameter.
+The main Konfiger contructor is not exported from the package, the two functions are exported for initialization, `from_string` and `from_file`. The from_string function creates a Konfiger object from a string with valid key value entry or from empty string, the from_file function creates the Konfiger object from a file, the two functions accept a cumpulsory second parameter `lazyLoad` which indicates whether to read all the entry from the file or string suring initialization. The lazyLoad parameter is useful for progressively read entries from a large file. The two initializing functions also take 2 extra optional parameters `delimeter` and `seperator`. If the third and fourth parameter is not specified the default is used, delimeter = `=""", seperator = `\n`. If the file or string has different delimeter and seperator always send the third and fourth parameter.
 
 The following initializer progressively read the file when needed
 
-```js
-let konfiger = Konfiger.fromFile('test/konfiger.conf', true)
+```python
+konfiger = from_file('test/konfiger.conf', True)
 ```
 
 The following initializer read all the entries from file at once
 
-```js
-let konfiger = Konfiger.fromFile('test/konfiger.conf', false)
+```python
+konfiger = from_file('test/konfiger.conf', False)
 ```
 
 The following initializer read all the entries from string when needed
 
-```js
-let konfiger = Konfiger.fromString(`
+```python
+konfiger = from_string("""
 Ones=11111111111
 Twos=2222222222222
-`, true)
+""", True)
 ```
 
 The following initializer read all the entries from String at once
 
-```js
-let konfiger = Konfiger.fromString(`
+```python
+konfiger = from_string("""
 Ones=11111111111
 Twos=2222222222222
-`, false)
+""", False)
 ```
 
 Initialize a string which have custom delimeter and seperator
 
-```js
-let konfiger = Konfiger.fromString(`Ones:11111111111,Twos:2222222222222`, 
-                                false, 
+```python
+konfiger = from_string("""Ones:11111111111,Twos:2222222222222""", 
+                                False, 
                                 ':',
                                 ',')
 ```
@@ -512,61 +505,61 @@ The following types can be added into the object, int, float, long, boolean, obj
 
 To add any object into the entry use the `put` method as it check the value type and properly get it string value
 
-```js
+```python
 konfiger.put("String", "This is a string")
 konfiger.put("Long", 143431423)
-konfiger.put("Boolean", true)
+konfiger.put("Boolean", True)
 konfiger.put("Float", 12.345)
 ```
 
-The `put` method do a type check on the value and calls the appropriate put method e.g `konfiger.put("Boolean", true)` will result in a call to `konfiger.putBoolean("Boolean", true)`. The following method are avaliable to directly add the value according to the type, `putString`, `putBoolean`, `putLong` and `putInt`. The previous example can be re-written as:
+The `put` method do a type check on the value and calls the appropriate put method e.g `konfiger.put("Boolean", True)` will result in a call to `konfiger.put_boolean("Boolean", True)`. The following method are avaliable to directly add the value according to the type, `put_string""", `put_boolean""", `put_long` and `putInt`. The previous example can be re-written as:
 
-```js
-konfiger.putString("String", "This is a string")
-konfiger.putLong("Long", 143431423)
-konfiger.putBoolean("Boolean", true)
-konfiger.putFloat("Float", 12.345)
+```python
+konfiger.put_string("String", "This is a string")
+konfiger.put_long("Long", 143431423)
+konfiger.put_boolean("Boolean", True)
+konfiger.put_float("Float", 12.345)
 ```
 
 ### Finding
 
-There are various ways to get the value from the konfiger object, the main `get` method and `getString` method both returns a string type, the other get methods returns specific types
+There are various ways to get the value from the konfiger object, the main `get` method and `get_string` method both returns a string type, the other get methods returns specific types
 
-```js
+```python
 konfiger.get("String")
 ```
 
-To get specific type from the object use the following methods, `getString`, `getBoolean`, `getLong`, `getFloat` and `getInt`. 
+To get specific type from the object use the following methods, `get_string""", `get_boolean""", `get_long""", `get_float` and `getInt`. 
 
-```js
-konfiger.getString("String")
-konfiger.getLong("Long")
-konfiger.getBoolean("Boolean")
-konfiger.getFloat("Float")
+```python
+konfiger.get_string("String")
+konfiger.get_long("Long")
+konfiger.get_boolean("Boolean")
+konfiger.get_float("Float")
 ```
 
 If the requested entrr does not exist a null/undefined value is returned, to prevent that a fallback value should be sent as second parameter incase the key is not found the second parameter will be returned.
 
-```js
+```python
 konfiger.get("String", "Default Value")
-konfiger.getBoolean("Boolean", false)
+konfiger.get_boolean("Boolean", False)
 ```
 
 If the konfiger is initialized with lazy loading enabled if the get method is called the stream will start reading until the key is found and the stream is paused again, if the key is not found the stream will read to end. 
 
 ### Updating
 
-The `put` method can be used to add new entry or to update an already existing entry in the object. The `updateAt` method is usefull for updating a value using it index instead of key
+The `put` method can be used to add new entry or to update an already existing entry in the object. The `update_at` method is usefull for updating a value using it index instead of key
 
-```js
-konfiger.updateAt(0, "This is an updated string")
+```python
+konfiger.update_at(0, "This is an updated string")
 ```
 
 ### Removing
 
-The `remove` method removes a key value entry from the konfiger, it returns true if an entry is removed and false if no entry is removed. The `remove` method accept either key(string) or index(int) of the entry.
+The `remove` method removes a key value entry from the konfiger, it returns True if an entry is removed and False if no entry is removed. The `remove` method accept either key(string) or index(int) of the entry.
 
-```js
+```python
 konfiger.remove("String")
 konfiger.remove(0)
 ```
@@ -575,42 +568,42 @@ konfiger.remove(0)
 
 Every operation on the konfiger object is done in memory to save the updated entries in a file call the `save` method with the file path to save the entry. If the konfiger is initiated from file then there is no need to add the file path to the `save` method, the entries will be saved to the file path used during initialization.
 
-```js
+```python
 konfiger.save("test/test.config.ini")
 ```
 
 in case of load from file, the save will write the entries to *test/test.config.ini*.
 
-```js
-//...
-var konfiger = Konfiger.fromFile('test/test.config.ini', true)
-//...
+```python
+#...
+var konfiger = from_file('test/test.config.ini', True)
+#...
 konfiger.save()
 ```
 
 ## API Documentations
 
-Even though JavaScript is weakly type the package does type checking to ensure wrong datatype is not passed into the functions.
+Even though python is weakly type the package does type checking to ensure wrong datatype is not passed into the functions.
 
 ### KonfigerStream
 
 | Function        | Description         
 | --------------- | ------------- 
-| KonfigerStream fileStream(filePath, delimeter, seperator, errTolerance)  | Initialize a new KonfigerStream object from the filePath. It throws en exception if the filePath does not exist or if the delimeter or seperator is not a single character. The last parameter is boolean if true the stream is error tolerant and does not throw any exception on invalid entry, only the first parameter is cumpulsory.
-| KonfigerStream stringStream(rawString, delimeter, seperator, errTolerance)  | Initialize a new KonfigerStream object from a string. It throws en exception if the rawString is not a string or if the delimeter or seperator is not a single character. The last parameter is boolean if true the stream is error tolerant and does not throw any exception on invalid entry, only the first parameter is cumpulsory.
-| Boolean hasNext()  | Check if the KonfigerStream still has a key value entry, returns true if there is still entry, returns false if there is no more entry in the KonfigerStream
-| Array next()  | Get the next Key Value array from the KonfigerStream is it still has an entry. Throws an error if there is no more entry. Always use `hasNext()` to check if there is still an entry in the stream.
-| Boolean isTrimingKey() | Check if the stream is configured to trim key, true by default
-| void setTrimingKey(trimingKey) | Change the stream to enable/disable key trimming
-| Boolean isTrimingValue() | Check if the stream is configured to trim entry value, true by default
-| void setTrimingValue(trimingValue) | Change the stream to enable/disable entry value trimming
-| String getCommentPrefix() | Get the prefix string that indicate a pair entry if commented
-| void setCommentPrefix(commentPrefix) | Change the stream comment prefix, any entry starting with the comment prefix will be skipped. Comment in KonfigerStream is relative to the key value entry and not relative to a line.
-| void setContinuationChar(contdChar) | Set the character that indicates to the stream to continue reading for the entry value on the next line. The follwoing line leading spaces is trimmed. The default is `\`
-| Char getContinuationChar() | Get the continuation character used in the stream.
-| void validateFileExistence(filePath)  | Validate the existence of the specified file path if it does not exist an exception is thrown
-| void errorTolerance(errTolerance)           | Enable or disable the error tolerancy property of the konfiger, if enabled no exception will be throw even when it suppose to there for it a bad idea but useful in a fail safe environment.
-| Boolean isErrorTolerant() | Check if the konfiger object errTolerance is set to true.
+| def file_stream(file_path, delimeter = '=', seperator = '\n', err_tolerance = False)  | Initialize a new KonfigerStream object from the filePath. It throws en exception if the filePath does not exist or if the delimeter or seperator is not a single character. The last parameter is boolean if True the stream is error tolerant and does not throw any exception on invalid entry, only the first parameter is cumpulsory.
+| def string_stream(raw_string, delimeter = '=', seperator = '\n', err_tolerance = False)  | Initialize a new KonfigerStream object from a string. It throws en exception if the rawString is not a string or if the delimeter or seperator is not a single character. The last parameter is boolean if True the stream is error tolerant and does not throw any exception on invalid entry, only the first parameter is cumpulsory.
+| def has_next(self)  | Check if the KonfigerStream still has a key value entry, returns True if there is still entry, returns False if there is no more entry in the KonfigerStream
+| def next(self)  | Get the next Key Value array from the KonfigerStream is it still has an entry. Throws an error if there is no more entry. Always use `has_next()` to check if there is still an entry in the stream.
+| def is_trimming_key(self) | Check if the stream is configured to trim key, True by default
+| def set_trimming_key(self, trimming_key) | Change the stream to enable/disable key trimming
+| def is_trimming_value(self) | Check if the stream is configured to trim entry value, True by default
+| def set_trimming_value(self, trimming_value) | Change the stream to enable/disable entry value trimming
+| def get_comment_prefix(self) | Get the prefix string that indicate a pair entry if commented
+| def set_comment_prefix(self, comment_prefix) | Change the stream comment prefix, any entry starting with the comment prefix will be skipped. Comment in KonfigerStream is relative to the key value entry and not relative to a line.
+| def set_continuation_char(self, continuation_char) | Set the character that indicates to the stream to continue reading for the entry value on the next line. The follwoing line leading spaces is trimmed. The default is `\`
+| def get_continuation_char(self) | Get the continuation character used in the stream.
+| def validate_file_existence(file_path)  | Validate the existence of the specified file path if it does not exist an exception is thrown
+| def error_tolerance(self, err_tolerance)           | Enable or disable the error tolerancy property of the konfiger, if enabled no exception will be throw even when it suppose to there for it a bad idea but useful in a fail safe environment.
+| def is_error_tolerant(self) | Check if the konfiger object errTolerance is set to True.
 
 ### Konfiger
 
@@ -618,65 +611,61 @@ Even though JavaScript is weakly type the package does type checking to ensure w
 
 | Field        | Description         
 | --------------- | ------------- 
-| MAX_CAPACITY  | The number of datas the konfiger can take, 10000000
+| GLOBAL_MAX_CAPACITY  | The number of datas the konfiger can take, 10000000
 
 #### Functions
 
 | Function        | Description         
 | --------------- | ------------- 
-| Konfiger fromFile(filePath, lazyLoad)           | Create the konfiger object from a file, the first parameter(string) is the file path, the second parameter(boolean) indicates whether to read all the entry in the file in the constructor or when needed, the default delimeter(`=`) and seperator(`\n`) will be used. This creates the konfiger object from call to `fromStream(konfigerStream, lazyLoad)` with the konfigerStream initialized with the filePath parameter. The new Konfiger object is returned.
-| Konfiger fromFile(filePath, lazyLoad, delimeter, seperator)           | Create the konfiger object from a file, the first(string) parameter is the file path, the second parameter(boolean) indicates whether to read all the entry in the file in the constructor or when needed, the third param(char) is the delimeter and the fourth param(char) is the seperator. This creates the konfiger object from call to `fromStream(konfigerStream, lazyLoad)` with the konfigerStream initialized with the filePath parameter. The new Konfiger object is returned.
-| Konfiger fromString(rawString, lazyLoad)           | Create the konfiger object from a string, the first parameter is the String(can be empty), the second boolean parameter indicates whether to read all the entry in the file in the constructor or when needed, the default delimeter(`=`) and seperator(`\n`) will be used. The new Konfiger object is returned.
-| Konfiger fromString(rawString, lazyLoad, delimeter, seperator)           | Create the konfiger object from a string, the first parameter is the String(can be empty), the second boolean parameter indicates whether to read all the entry in the file in the constructor or when needed, the third param is the delimeter and the fourth param is the seperator. The new Konfiger object is returned.
-| Konfiger fromStream(KonfigerStream, Boolean)           | Create the konfiger object from a KonfigerStream object, the second boolean parameter indicates whether to read all the entry in the file in the constructor or when needed this make data loading progressive as data is only loaded from the file when put or get until the Stream reaches EOF. The new Konfiger object is returned.
-| void put(key, value)           | Put any object into the konfiger. if the second parameter is a Javascript Object, `JSON.stringify` will be used to get the string value of the object else the appropriate put* method will be called. e.g `put('Name', 'Adewale')` will result in the call `putString('Name', 'Adewale')`.
-| void putString(key, value)           | Put a String into the konfiger, the second parameter must be a string.
-| void putBoolean(key, value)           | Put a Boolean into the konfiger, the second parameter must be a Boolean.
-| void putLong(key, value)           | Put a Long into the konfiger, the second parameter must be a Number.
-| void putInt(key, value)           | Put a Int into the konfiger, alias for `void putLong(key, value)`.
-| void putFloat(key, value)           | Put a Float into the konfiger, the second parameter must be a Float
-| void putDouble(key, value)           | Put a Double into the konfiger, the second parameter must be a Double
-| void putComment(theComment)           | Put a literal comment into the konfiger, it simply add the comment prefix as key and value to the entries e.g. `kon.putComment("Hello World")` add the entry `//:Hello World`
-| Array keys()           | Get all the keys entries in the konfiger object in iterable array list
-| Array values()           | Get all the values entries in the konfiger object in iterable array list
-| Array[Key, Value] entries()           | Get all the entries in the konfiger in a `[['Key', 'Value'], ...]`
-| String get(key, defaultValue)       | Get a value as string, the second parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `undefined` will be returned
-| String getString(key, defaultValue)   | Get a value as string, the second(string) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified empty string will be returned. 
-| Boolean getBoolean(key, defaultValue)   | Get a value as boolean, the second(Boolean) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `false` will be returned. When trying to cast the value to boolean if an error occur an exception will be thrown except if error tolerance is set to true then false will be returned. use `errorTolerance(Boolean)` to set the konfiger object error tolerancy.
-| Number getLong(key, defaultValue)   | Get a value as Number, the second(Number) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0` will be returned. When trying to cast the value to Number if an error occur an exception will be thrown except if error tolerance is set to true then `0` will be returned. use `errorTolerance(Boolean)` to set the konfiger object error tolerancy.
-| Number getInt(key, defaultValue)   | Get a value as Number, alias for `Number getLong(key, defaultValue)`.
-| Float getFloat(key, defaultValue)   | Get a value as Float, the second(Float) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0.0` will be returned. When trying to cast the value to Float if an error occur an exception will be thrown except if error tolerance is set to true then `0.0` will be returned. use `errorTolerance(Boolean)` to set the konfiger object error tolerancy.
-| Double getDouble(key, defaultValue)   | Get a value as Double, the second(Double) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0.0` will be returned. When trying to cast the value to Double if an error occur an exception will be thrown except if error tolerance is set to true then `0.0` will be returned. use `errorTolerance(Boolean)` to set the konfiger object error tolerancy.
-| void remove(keyIndex)           | Remove a key value entry at a particular index. Returns the value of the entry that was removed.
-| String remove(keyIndex)           | Remove a key value entry using the entry Key. Returns the value of the entry that was removed.
-| void appendString(rawString)          | Append new data to the konfiger from a string, the new string delimeter and seperator must be the same with the current konfigure delimeter and seperator, if it not the same use the `setDelimeter` and `setSeperator` to change the konfiger seperator and delimeter to the new file seperator and delimeter. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
-| void appendFile(filePath)          | Read new datas from the file path and append, the new file delimeter and seperator must be the same with the current konfigure delimeter and seperator, if it not the same use the `setDelimeter` and `setSeperator` to change the konfiger seperator and delimeter to the new file seperator and delimeter. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
-| void appendString(rawString, delimeter, separator)          | Append new data to the konfiger from a string. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
-| void appendFile(filePath, delimeter, separator)          | Read new datas from the file path and append. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
-| void save(filePath?)         | Save the konfiger datas into a file. The argument filePath is optional if specified the entries is writtent to the filePath else the filePath used to initialize the Konfiger object is used and if the Konfiger is initialized `fromString` and the filePath is not specified an exception is thrown. This does not clear the already added entries.
-| Char getSeperator()           | Get seperator char that seperate the key value entry, default is `\n`.
-| Char getDelimeter()           | Get delimeter char that seperated the key from it value, default is `=`.
-| void setSeperator(seperator)           | Change seperator char that seperate the datas, note that the file is not updates, to change the file call the `save()` function. If the new seperator is different from the old one all the entries values will be re parsed to get the new proper values, this process can take time if the entries is much.
-| void setDelimeter(delimeter)           | Change delimeter char that seperated the key from object, note that the file is not updates, to change the file call the `save()` function 
-| void setCaseSensitivity(caseSensitive) | change the case sensitivity of the konfiger object, if true `get("Key")` and `get("key")` will return different value, if false same value will be returned.
-| Boolean isCaseSensitive() | Return true if the konfiger object is case sensitive and false if it not case sensitive
-| Number size()           | Get the total size of key value entries in the konfiger
-| void clear()           | clear all the key value entries in the konfiger. This does not update the file call the `save` method to update the file
-| Boolean isEmpty()           | Check if the konfiger does not have an key value entry.
-| void updateAt(index, value)           | Update the value at the specified index with the new string value, throws an error if the index is OutOfRange 
-| Boolean contains(key)           | Check if the konfiger contains a key 
-| void enableCache(enableCache_)           | Enable or disable caching, caching speeds up data search but can take up space in memory (very small though). Using `getString` method to fetch vallue **99999999999** times with cache disabled takes over 1hr and with cache enabled takes 20min.
-| String toString()           | All the kofiger datas are parsed into valid string with regards to the delimeter and seprator, the result of this method is what get written to file in the `save` method. The result is cached and calling the method while the no entry is added, deleted or updated just return the last result instead of parsing the entries again.
-| void resolve(obj)           | Attach an object to konfiger, on attachment the values of the entries in the object will be set to the coresponding value in konfiger. The object can have the `matchGetKey` function which is called with a key in konfiger to get the value to map to the entry and the function `matchPutKey` to check which value to fetch from the object to put into konfiger.
-| void dissolve(obj) | Each string fields in the object will be put into konfiger. The object can have the `matchGetKey` function which is called with a key in konfiger to get the value to map to the entry. This does not attach the object.
-| attach(obj) | Attach an object to konfiger without dissolving it field into konfiger or setting it fields to a matching konfiger entry. Use this if the values in an object is to be left intact but updated if a matching entry in konfiger changes. 
-| Object detach() | Detach the object attached to konfiger when the resolve function is called. The detached object is returned.
+| def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n')          | Create the konfiger object from a file, the first(string) parameter is the file path, the second parameter(boolean) indicates whether to read all the entry in the file in the constructor or when needed, the third param(char) is the delimeter and the fourth param(char) is the seperator. This creates the konfiger object from call to `fromStream(konfigerStream, lazyLoad)` with the konfigerStream initialized with the filePath parameter. The new Konfiger object is returned.
+| def from_string(raw_string, lazy_load=True, delimeter='=', seperator='\n')           | Create the konfiger object from a string, the first parameter is the String(can be empty), the second boolean parameter indicates whether to read all the entry in the file in the constructor or when needed, the third param is the delimeter and the fourth param is the seperator. The new Konfiger object is returned.
+| def from_stream(konfiger_stream, lazy_load=True)           | Create the konfiger object from a KonfigerStream object, the second boolean parameter indicates whether to read all the entry in the file in the constructor or when needed this make data loading progressive as data is only loaded from the file when put or get until the Stream reaches EOF. The new Konfiger object is returned.
+| def put(self, key, value)           | Put any object into the konfiger. if the second parameter is a python Object, `JSON.stringify` will be used to get the string value of the object else the appropriate put* method will be called. e.g `put('Name', 'Adewale')` will result in the call `put_string('Name', 'Adewale')`.
+| def put_string(self, key, value)           | Put a String into the konfiger, the second parameter must be a string.
+| def put_boolean(self, key, value)           | Put a Boolean into the konfiger, the second parameter must be a Boolean.
+| def put_long(self, key, value)           | Put a Long into the konfiger, the second parameter must be a Number.
+| def put_int(self, key, value)           | Put a Int into the konfiger, alias for `def put_long(self, key, value)`.
+| def put_float(self, key, value)           | Put a Float into the konfiger, the second parameter must be a Float
+| def put_double(self, key, value)           | Put a Double into the konfiger, the second parameter must be a Double
+| def put_comment(self, the_comment)           | Put a literal comment into the konfiger, it simply add the comment prefix as key and value to the entries e.g. `kon.put_comment("Hello World")` add the entry `//:Hello World`
+| def keys(self)           | Get all the keys entries in the konfiger object in iterable array list
+| def values(self)           | Get all the values entries in the konfiger object in iterable array list
+| def entries(self)           | Get all the entries in the konfiger in a `[['Key', 'Value'], ...]`
+| def get(self, key, default_value=None)       | Get a value as string, the second parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `undefined` will be returned
+| def get_string(self, key, default_value="")   | Get a value as string, the second(string) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified empty string will be returned. 
+| def get_boolean(self, key, default_value=False)   | Get a value as boolean, the second(Boolean) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `False` will be returned. When trying to cast the value to boolean if an error occur an exception will be thrown except if error tolerance is set to True then False will be returned.
+| def get_long(self, key, default_value=0)   | Get a value as Number, the second(Number) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0` will be returned. When trying to cast the value to Number if an error occur an exception will be thrown except if error tolerance is set to True then `0` will be returned.
+| def get_int(self, key, default_value=0)   | Get a value as Number, alias for `def get_long(key, defaultValue)`.
+| def get_float(self, key, default_value=0.0)   | Get a value as Float, the second(Float) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0.0` will be returned. When trying to cast the value to Float if an error occur an exception will be thrown except if error tolerance is set to True then `0.0` will be returned. 
+| def get_double(self, key, default_value=0.0)   | Get a value as Double, the second(Double) parameter is optional if it is specified it is returned if the key does not exist, if the second parameter is not specified `0.0` will be returned. When trying to cast the value to Double if an error occur an exception will be thrown except if error tolerance is set to True then `0.0` will be returned. 
+| def remove(self, key_index)           | Remove a key value entry at a particular index. Returns the value of the entry that was removed.
+| def remove(self, key_index)           | Remove a key value entry using the entry Key. Returns the value of the entry that was removed.
+| def append_string(self, raw_string, delimeter=None, seperator=None)          | Append new data to the konfiger from a string. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
+| def append_file(self, file_path, delimeter=None, seperator=None)          | Read new datas from the file path and append. If the Konfiger is initialized with lazy loading all the data will be loaded before the entries from the new string is added.
+| def save(self, file_path=None)         | Save the konfiger datas into a file. The argument filePath is optional if specified the entries is writtent to the filePath else the filePath used to initialize the Konfiger object is used and if the Konfiger is initialized `from_string` and the filePath is not specified an exception is thrown. This does not clear the already added entries.
+| def get_seperator(self)           | Get seperator char that seperate the key value entry, default is `\n`.
+| def get_delimeter(self)           | Get delimeter char that seperated the key from it value, default is `=`.
+| def set_seperator(self, seperator)           | Change seperator char that seperate the datas, note that the file is not updates, to change the file call the `save()` function. If the new seperator is different from the old one all the entries values will be re parsed to get the new proper values, this process can take time if the entries is much.
+| def set_delimeter(self, delimeter)           | Change delimeter char that seperated the key from object, note that the file is not updates, to change the file call the `save()` function 
+| def set_case_sensitivity(self, case_sensitive) | change the case sensitivity of the konfiger object, if True `get("Key")` and `get("key")` will return different value, if False same value will be returned.
+| def is_case_sensitive(self) | Return True if the konfiger object is case sensitive and False if it not case sensitive
+| def `__len__`(self)           | Get the total size of key value entries in the konfiger
+| def clear(self)           | clear all the key value entries in the konfiger. This does not update the file call the `save` method to update the file
+| def is_empty(self)           | Check if the konfiger does not have an key value entry.
+| void update_at(index, value)           | Update the value at the specified index with the new string value, throws an error if the index is OutOfRange 
+| def contains(self, key)           | Check if the konfiger contains a key 
+| def enable_cache(self, enable_cache_)           | Enable or disable caching, caching speeds up data search but can take up space in memory (very small though). Using `get_string` method to fetch vallue **99999999999** times with cache disabled takes over 1hr and with cache enabled takes 20min.
+| def `__str__`(self)           | All the kofiger datas are parsed into valid string with regards to the delimeter and seprator, the result of this method is what get written to file in the `save` method. The result is cached and calling the method while the no entry is added, deleted or updated just return the last result instead of parsing the entries again.
+| def resolve(self, obj)           | Attach an object to konfiger, on attachment the values of the entries in the object will be set to the coresponding value in konfiger. The object can have the `match_get_key` function which is called with a key in konfiger to get the value to map to the entry and the function `match_put_key` to check which value to fetch from the object to put into konfiger.
+| def dissolve(self, obj) | Each string fields in the object will be put into konfiger. The object can have the `match_get_key` function which is called with a key in konfiger to get the value to map to the entry. This does not attach the object.
+| def attach(self, obj) | Attach an object to konfiger without dissolving it field into konfiger or setting it fields to a matching konfiger entry. Use this if the values in an object is to be left intact but updated if a matching entry in konfiger changes. 
+| def detach(self) | Detach the object attached to konfiger when the resolve function is called. The detached object is returned.
 
 ## How it works
 
-Konfiger stream progressively load the key value entry from a file or string when needed, it uses two method `hasNext` which check if there is still an entry in the stream and `next` for the current key value entry in the stream. 
+Konfiger stream progressively load the key value entry from a file or string when needed, it uses two method `has_next` which check if there is still an entry in the stream and `next` for the current key value entry in the stream. 
  
-In Konfiger the key value pair is stored in a `map`, all search updating and removal is done on the `konfigerObjects` in the class. The string sent as first parameter if parsed into valid key value using the separator and delimiter fields and if loaded from file it content is parsed into valid key value pair. The `toString` method also parse the `konfigerObjects` content into a valid string with regards to the 
+In Konfiger the key value pair is stored in a `map`, all search updating and removal is done on the `konfiger_objects` in the class. The string sent as first parameter if parsed into valid key value using the separator and delimiter fields and if loaded from file it content is parsed into valid key value pair. The `toString` method also parse the `konfiger_objects` content into a valid string with regards to the 
 separator and delimeter. The value is properly escaped and unescaped.
 
 The `save` function write the current `Konfiger` to the file, if the file does not exist it is created if it can. Everything is written in memory and is disposed on app exit hence it important to call the `save` function when nessasary.
@@ -689,7 +678,7 @@ You can open issue or file a request that only address problems in this implemen
 
 ## Support
 
-You can support some of this community as they make big impact in the traing of individual to get started with software engineering and open source contribution.
+You can support some of this community as they make big impact in the training of individual to get started with software engineering and open source contribution.
 
 - [https://www.patreon.com/devcareer](https://www.patreon.com/devcareer)
 
