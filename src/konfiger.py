@@ -90,9 +90,9 @@ class Konfiger:
             match_put_key = getattr(self.attached_resolve_obj, "match_put_key", None)
             if callable(match_put_key):
                 find_key = match_put_key(key)
-                if find_key is None:
-                    if hasattr(self.attached_resolve_obj, key):
-                        find_key = key
+            if find_key is None:
+                if hasattr(self.attached_resolve_obj, key):
+                    find_key = key
             if find_key is not None:
                 field = getattr(self.attached_resolve_obj, find_key, None)
                 if not callable(field):
@@ -409,7 +409,7 @@ class Konfiger:
         fields = dir(obj)
         for key in fields:
             value = getattr(obj, key)
-            if not callable(key) and not key.startswith("__"):
+            if not callable(value) and not key.startswith("__"):
                 find_key = key
                 match_get_key = getattr(obj, "match_get_key", None)
                 if callable(match_get_key):
@@ -433,7 +433,7 @@ class Konfiger:
         fields = dir(obj)
         for key in fields:
             value = getattr(obj, key)
-            if not callable(key) and not key.startswith("__"):
+            if not callable(value) and not key.startswith("__"):
                 find_key = key
                 match_get_key = getattr(obj, "match_get_key", None)
                 if callable(match_get_key):

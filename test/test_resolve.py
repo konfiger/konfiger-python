@@ -271,7 +271,7 @@ class TestKonfigerResolve(unittest.TestCase):
         kon.put("AnnotatedEntry", True)
         self.assertEqual(mixedTypes.annotatedEntry, True)
 
-    def test_resolve_with_changing_values_and_map_key_with_match_put_key(self):
+    def test_resolve_with_changing_values_and_map_key_with_attach(self):
         kstream = file_stream('test/test.comment.inf')
         kstream.set_comment_prefix("[")
         kon = from_stream(kstream)
