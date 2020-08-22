@@ -1,19 +1,6 @@
-.. raw:: html
-
-   </p>
-
-.. raw:: html
-
-   <p style="text-align: center;" align="center">
 
 Light weight package to manage key value based configuration and data
 files.
-
-.. raw:: html
-
-   </p>
-
---------------
 
 The notable use cases of this package is loading configuration file,
 language file, preference setting in an application.
@@ -549,7 +536,7 @@ defined
    value is string, you will need to do the type conversion by your
    self.
 
-If your entry keys is the same as the object keys you don’t need to
+If your entry keys is the same as the object keys you don"t need to
 declare the match_get_key or match_put_key function in the object.
 
 Usage
@@ -738,8 +725,8 @@ KonfigerStream
 | Function                            | Description                    |
 +=====================================+================================+
 | def file_stream(file_path,          | Initialize a new               |
-| delimeter = ‘=’, seperator =        | KonfigerStream object from the |
-| ‘\n’, err_tolerance =               | filePath. It throws en         |
+| delimeter = "=", seperator =        | KonfigerStream object from the |
+| "\n", err_tolerance =               | filePath. It throws en         |
 | False)                              | exception if the filePath does |
 |                                     | not exist or if the delimeter  |
 |                                     | or seperator is not a single   |
@@ -751,8 +738,8 @@ KonfigerStream
 |                                     | parameter is cumpulsory.       |
 +-------------------------------------+--------------------------------+
 | def string_stream(raw_string,       | Initialize a new               |
-| delimeter = ‘=’, seperator =        | KonfigerStream object from a   |
-| ‘\n’, err_tolerance =               | string. It throws en exception |
+| delimeter = "=", seperator =        | KonfigerStream object from a   |
+| "\n", err_tolerance =               | string. It throws en exception |
 | False)                              | if the rawString is not a      |
 |                                     | string or if the delimeter or  |
 |                                     | seperator is not a single      |
@@ -853,8 +840,8 @@ Functions
 | Function                            | Description                    |
 +=====================================+================================+
 | def from_file(file_path,            | Create the konfiger object     |
-| lazy_load=True, delimeter=‘=’,      | from a file, the first(string) |
-| seperator=‘\n’)                     | parameter is the file path,    |
+| lazy_load=True, delimeter="=",      | from a file, the first(string) |
+| seperator="\n")                     | parameter is the file path,    |
 |                                     | the second parameter(boolean)  |
 |                                     | indicates whether to read all  |
 |                                     | the entry in the file in the   |
@@ -872,8 +859,8 @@ Functions
 |                                     | object is returned.            |
 +-------------------------------------+--------------------------------+
 | def from_string(raw_string,         | Create the konfiger object     |
-| lazy_load=True, delimeter=‘=’,      | from a string, the first       |
-| seperator=‘\n’)                     | parameter is the String(can be |
+| lazy_load=True, delimeter="=",      | from a string, the first       |
+| seperator="\n")                     | parameter is the String(can be |
 |                                     | empty), the second boolean     |
 |                                     | parameter indicates whether to |
 |                                     | read all the entry in the file |
@@ -937,7 +924,7 @@ Functions
 |                                     | konfiger, it simply add the    |
 |                                     | comment prefix as key and      |
 |                                     | value to the entries           |
-|                                     | e.g. ``ko                      |
+|                                     | e.g ``ko                       |
 |                                     | n.put_comment("Hello World")`` |
 |                                     | add the entry                  |
 |                                     | ``//:Hello World``             |

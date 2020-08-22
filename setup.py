@@ -20,7 +20,7 @@ setup(
 	classifiers=[
         'Development Status :: 5 - Production/Stable',
 		'Natural Language :: English',
-        'License :: OSI Approved :: MIT License (MIT)',
+        #'License :: OSI Approved :: MIT License (MIT)',
         'Topic :: Database',
         'Topic :: Database :: Database Engines/Servers',
         'Topic :: Database :: Front-Ends',
