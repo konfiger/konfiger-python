@@ -23,13 +23,13 @@ def konfiger_values(argument):
         return klazz
     return mutated_class
 
-def from_file(file_path, lazy_load=True, delimeter='=', seperator='\n'):
-    kon = from_stream(file_stream(file_path, delimeter, seperator), lazy_load)
+def from_file(file_path, lazy_load=True, delimiter='=', separator='\n'):
+    kon = from_stream(file_stream(file_path, delimiter, separator), lazy_load)
     kon.file_path = kon.stream.stream_obj
     return kon
 
-def from_string(raw_string, lazy_load=True, delimeter='=', seperator='\n'):
-    return from_stream(string_stream(raw_string, delimeter, seperator), lazy_load)
+def from_string(raw_string, lazy_load=True, delimiter='=', separator='\n'):
+    return from_stream(string_stream(raw_string, delimiter, separator), lazy_load)
 
 def from_stream(konfiger_stream, lazy_load=True):
     if not is_bool(lazy_load):
@@ -44,8 +44,8 @@ class Konfiger:
         self.loading_ends = False
         self.lazy_load = lazy_load
         self.konfiger_objects = {}
-        self.delimeter = stream.delimeter
-        self.seperator = stream.seperator
+        self.delimiter = stream.delimiter
+        self.separator = stream.separator
         self.case_sensitive = True
         self.changes_occur = True
         self.string_value = ""
@@ -293,30 +293,44 @@ class Konfiger:
         
     def is_empty(self):
         return self.__len__() == 0
-        
+       
+    # deprecated due to typo
     def get_seperator(self):
-        return self.seperator
+        return self.separator
         
-    def set_seperator(self, seperator):
-        if not is_char(seperator):
-            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, seperator must be a char found " + str(type(seperator)))
+    # deprecated due to typo
+    def set_seperator(self, separator):
+        self.set_separator(separator)
+        
+    def get_separator(self):
+        return self.separator
+        
+    def set_separator(self, separator):
+        if not is_char(separator):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, separator must be a char found " + str(type(separator)))
             
-        if self.seperator != seperator:
+        if self.separator != separator:
             self.changes_occur = True
-            old_seperator = self.seperator
-            self.seperator = seperator
+            old_separator = self.separator
+            self.separator = separator
             for key, value in self.konfiger_objects.items():
-                self.konfiger_objects[key] = un_escape_string(value, seperator)
+                self.konfiger_objects[key] = un_escape_string(value, separator)
         
     def get_delimeter(self):
-        return self.delimeter
+        return self.delimiter
         
-    def set_delimeter(self, delimeter):
-        if not is_char(delimeter):
-            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, delimeter must be a char found " + str(type(delimeter)))
+    def set_delimeter(self, delimiter):
+        self.set_delimiter(delimiter)
+        
+    def get_delimiter(self):
+        return self.delimiter
+        
+    def set_delimiter(self, delimiter):
+        if not is_char(delimiter):
+            raise TypeError("io.github.thecarisma.konfiger: Invalid argument, delimiter must be a char found " + str(type(delimiter)))
             
         self.changes_occur = True
-        self.delimeter = delimeter
+        self.delimiter = delimiter
         
     def is_case_sensitive(self):
         return self.case_sensitive
@@ -351,10 +365,10 @@ class Konfiger:
             for key, value in self.konfiger_objects.items():
                 if key is None:
                     continue
-                self.string_value = self.string_value + key + self.delimeter + escape_string(value, self.seperator)
+                self.string_value = self.string_value + key + self.delimiter + escape_string(value, self.separator)
                 index = index + 1
                 if index < len(self.konfiger_objects):
-                    self.string_value = self.string_value + self.seperator
+                    self.string_value = self.string_value + self.separator
             self.changes_occur = False
             
         return self.string_value
@@ -377,25 +391,25 @@ class Konfiger:
         with open(file_path, 'w') as file:
             file.write(self.__str__())
         
-    def append_string(self, raw_string, delimeter=None, seperator=None):
-        if delimeter is None:
-            delimeter = self.delimeter
-        if seperator is None:
-            seperator = self.seperator
+    def append_string(self, raw_string, delimiter=None, separator=None):
+        if delimiter is None:
+            delimiter = self.delimiter
+        if separator is None:
+            separator = self.separator
         
-        stream_ = string_stream(raw_string, delimeter, seperator)
+        stream_ = string_stream(raw_string, delimiter, separator)
         while stream_.has_next():
             obj = stream_.next()
             self.put_string(obj[0], obj[1])
         self.changes_occur = True
         
-    def append_file(self, file_path, delimeter=None, seperator=None):
-        if delimeter is None:
-            delimeter = self.delimeter
-        if seperator is None:
-            seperator = self.seperator
+    def append_file(self, file_path, delimiter=None, separator=None):
+        if delimiter is None:
+            delimiter = self.delimiter
+        if separator is None:
+            separator = self.separator
         
-        stream_ = file_stream(file_path, delimeter, seperator)
+        stream_ = file_stream(file_path, delimiter, separator)
         while stream_.has_next():
             obj = stream_.next()
             self.put_string(obj[0], obj[1])

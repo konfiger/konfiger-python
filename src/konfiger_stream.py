@@ -7,11 +7,11 @@
 import os.path
 from .konfiger_util import type_of, is_string, is_char, is_bool, escape_string, un_escape_string
 
-def file_stream(file_path, delimeter = '=', seperator = '\n', err_tolerance = False):
-    return KonfigerStream(file_path, delimeter, seperator, err_tolerance, True)
+def file_stream(file_path, delimiter = '=', separator = '\n', err_tolerance = False):
+    return KonfigerStream(file_path, delimiter, separator, err_tolerance, True)
 
-def string_stream(raw_string, delimeter = '=', seperator = '\n', err_tolerance = False):
-    return KonfigerStream(raw_string, delimeter, seperator, err_tolerance, False)
+def string_stream(raw_string, delimiter = '=', separator = '\n', err_tolerance = False):
+    return KonfigerStream(raw_string, delimiter, separator, err_tolerance, False)
     
 def validate_file_existence(file_path):
     if not file_path:
@@ -23,10 +23,10 @@ def validate_file_existence(file_path):
 
 class KonfigerStream:
 
-    def __init__(self, stream_obj, delimeter, seperator, err_tolerance, is_file):
+    def __init__(self, stream_obj, delimiter, separator, err_tolerance, is_file):
         self.stream_obj = stream_obj
-        self.delimeter = delimeter
-        self.seperator = seperator
+        self.delimiter = delimiter
+        self.separator = separator
         self.err_tolerance = err_tolerance
         self.is_file = is_file
         self.trimming_key = True
@@ -42,12 +42,12 @@ class KonfigerStream:
                 raise TypeError("Invalid argument expecting str found " + str(type(stream_obj)))
         if not is_bool(err_tolerance):
             raise TypeError("Invalid argument for err_tolerance expecting bool found " + str(type(err_tolerance)))
-        if delimeter and not seperator:
-            raise TypeError("Invalid length of argument, seperator or delimeter parameter is missing")
-        if not is_char(self.delimeter):
-            raise TypeError("Invalid argument for delimeter expecting char found " + str(type(self.delimeter)))
-        if not is_char(self.seperator):
-            raise TypeError("Invalid argument for seperator expecting char found " + str(type(self.seperator)))
+        if delimiter and not separator:
+            raise TypeError("Invalid length of argument, separator or delimiter parameter is missing")
+        if not is_char(self.delimiter):
+            raise TypeError("Invalid argument for delimiter expecting char found " + str(type(self.delimiter)))
+        if not is_char(self.separator):
+            raise TypeError("Invalid argument for separator expecting char found " + str(type(self.separator)))
         
         self.read_position = 0
         self.has_next_ = False
@@ -113,7 +113,7 @@ class KonfigerStream:
                         self.is_first |= 1
                         if sub_count == comment_size:
                             self.read_position += 1
-                            while byte and byte != self.seperator:
+                            while byte and byte != self.separator:
                                 self.read_position += 1
                                 f.seek(self.read_position)
                                 byte = f.read(1)
@@ -132,7 +132,7 @@ class KonfigerStream:
                         sub_count += 1
                     if sub_count == comment_size:
                         self.read_position += 1
-                        while self.read_position < len(self.stream_obj) and self.stream_obj[self.read_position] != self.seperator:
+                        while self.read_position < len(self.stream_obj) and self.stream_obj[self.read_position] != self.separator:
                             self.read_position += 1
                         self.read_position += 1
                         return self.has_next()
@@ -186,13 +186,13 @@ class KonfigerStream:
                                 char_ = f.read(1)
                             self.read_position -= 1
                             continue
-                    if char_ == self.seperator and prev_char != '^':
+                    if char_ == self.separator and prev_char != '^':
                         if len(key) == 0 and value == "":
                             continue
                         if parse_key == True and self.err_tolerance == False:
                             raise LookupError("Invalid entry detected near Line " + str(line) + ":"  + str(column))
                         break
-                    if char_ == self.delimeter and parse_key:
+                    if char_ == self.delimiter and parse_key:
                         if value != "" and self.err_tolerance != False:
                             raise LookupError("The input is imporperly sepreated near Line " + str(line) + ":"  + str(column)+". Check the separator")
                         parse_key = False
@@ -226,13 +226,13 @@ class KonfigerStream:
                                 character = self.stream_obj[self.read_position]
                             self.read_position -= 1
                             continue
-                if character == self.seperator and prev_char != '^' and not parse_key:
+                if character == self.separator and prev_char != '^' and not parse_key:
                     if key == "" and value =="":
                         continue
                     if parse_key == True and self.err_tolerance == False:
                         raise LookupError("Invalid entry detected near Line " + str(line) + ":"  + str(column))
                     break
-                if character == self.delimeter and parse_key:
+                if character == self.delimiter and parse_key:
                     if value != "" and self.err_tolerance == False:
                         raise LookupError("The input is imporperly sepreated near Line " + str(line) + ":"  + str(column)+". Check the separator")
                     parse_key = False 
@@ -246,7 +246,7 @@ class KonfigerStream:
             self.read_position += 1
         return (
                 key.strip() if self.trimming_key else key, 
-                un_escape_string(value, self.seperator).strip() if self.trimming_value else un_escape_string(value, self.seperator)
+                un_escape_string(value, self.separator).strip() if self.trimming_value else un_escape_string(value, self.separator)
             )
         
     def done_reading(self):

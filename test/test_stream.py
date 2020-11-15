@@ -21,7 +21,7 @@ class TestKonfigerStream(unittest.TestCase):
         
         with self.assertRaises(TypeError) as context:
             ks = file_stream("./setup.py", ',', "==")
-        self.assertTrue('Invalid argument for seperator expecting char' in str(context.exception))
+        self.assertTrue('Invalid argument for separator expecting char' in str(context.exception))
         
         with self.assertRaises(TypeError) as context:
             ks = string_stream(30)

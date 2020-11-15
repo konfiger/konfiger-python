@@ -8,7 +8,7 @@ from src import escape_string, un_escape_string
   
 class TestKonfigerUtil(unittest.TestCase): 
   
-    def test_check_escape_and_unescape_seperator(self):         
+    def test_check_escape_and_unescape_separator(self):         
         actual_str = "\\,Hello¬W\n-\t-\torld"
         t1 = escape_string(actual_str, '¬')
         t2 = un_escape_string(actual_str)

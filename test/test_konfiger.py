@@ -102,16 +102,16 @@ Boolean=True
         self.assertEqual(len(kon), 1)
         self.assertEqual(kon.get("Three"), "333")
 
-    def test_set_get_delimeter_and_seperator(self):
+    def test_set_get_delimiter_and_separator(self):
         kon = from_file('test/test.config.ini', True)
         
-        self.assertEqual(kon.get_seperator(), "\n")
-        self.assertEqual(kon.get_delimeter(), "=")
+        self.assertEqual(kon.get_separator(), "\n")
+        self.assertEqual(kon.get_delimiter(), "=")
         self.assertEqual(len(str(kon).split("\n")) > 2, True)
-        kon.set_seperator('-')
-        kon.set_delimeter('+')
-        self.assertEqual(kon.get_seperator(), "-")
-        self.assertEqual(kon.get_delimeter(), "+")
+        kon.set_separator('-')
+        kon.set_delimiter('+')
+        self.assertEqual(kon.get_separator(), "-")
+        self.assertEqual(kon.get_delimiter(), "+")
         self.assertEqual(len(str(kon).split("\n")), 1)
 
     def test_escaping_and_unescaping_entries_and_save(self):
@@ -131,16 +131,16 @@ Boolean=True
         self.assertEqual(str(kon), str(kon))
         self.assertEqual(str(kon1), str(kon1))
 
-    def test_complex_and_confusing_seperator(self):
+    def test_complex_and_confusing_separator(self):
         kon = from_string('Occupation=Software En^gineergLocation=Ni^geriagState=La^gos', False, '=', 'g')
         
         self.assertEqual(len(kon), 3)
         self.assertEqual(str(kon).find("^g") > -1, True)
         for key, value in kon.entries():
             self.assertEqual(value.find("^g") > -1, False)
-        kon.set_seperator('f')
+        kon.set_separator('f')
         self.assertEqual(kon.get("Occupation"), "Software Engineer")
-        kon.set_seperator('\n')
+        kon.set_separator('\n')
         self.assertEqual(str(kon).find("^g") > -1, False)
         self.assertEqual(len(kon), 3)
         for key, value in kon.entries():

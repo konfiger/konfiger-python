@@ -8,7 +8,7 @@ setup(
         'konfiger': 'src'
     },
 	include_package_data=True,
-	version = '1.2.4',
+	version = '1.2.5',
 	platforms='any',
 	description = 'Light weight package to manage key value based configuration and data files for Python',
     long_description = open('README.rst').read(),

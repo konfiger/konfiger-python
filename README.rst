@@ -17,7 +17,7 @@ Table of content
    -  `Write to disk <#write-to-disk>`__
    -  `Get Types <#get-types>`__
    -  `Lazy Loading <#lazy-loading>`__
-   -  `Seperator and delimeter <#seperator-and-delimeter>`__
+   -  `Seperator and delimiter <#separator-and-delimiter>`__
    -  `Read file with Stream <#read-file-with-stream>`__
    -  `Read String with Stream <#read-string-with-stream>`__
    -  `Skip Comment entries <#Skip-comment-entries>`__
@@ -188,19 +188,19 @@ The content of ``test/konfiger.conf`` is
    #now the size is equal to the entry
    print(len(kon))
 
-Seperator and delimeter
+Seperator and delimiter
 ~~~~~~~~~~~~~~~~~~~~~~~
 
-Initailize a konfiger object with default seperator and delimeter then
-change the seperator and selimeter at runtime
+Initailize a konfiger object with default separator and delimiter then
+change the separator and selimeter at runtime
 
 .. code:: python
 
    from konfiger import from_file
 
    kon = from_file('test/konfiger.conf', False)
-   kon.set_delimeter('?')
-   kon.set_seperator(',')
+   kon.set_delimiter('?')
+   kon.set_separator(',')
 
    print(str(kon))
 
@@ -208,7 +208,7 @@ Read file with Stream
 ~~~~~~~~~~~~~~~~~~~~~
 
 Read a key value file using the progressive
-`KonfigerStream <https://github.com/konfiger/konfiger-python/blob/master/src/konfiger_stream.py>`__,
+`KonfigerStream <https://github.com/konfiger/konfiger-python/blob/main/src/konfiger_stream.py>`__,
 each scan returns the current key value array ``('key', 'value')``
 
 .. code:: python
@@ -224,7 +224,7 @@ Read String with Stream
 ~~~~~~~~~~~~~~~~~~~~~~~
 
 Read a key value string using the progressive
-`KonfigerStream <https://github.com/konfiger/konfiger-python/blob/master/src/konfiger_stream.py>`__,
+`KonfigerStream <https://github.com/konfiger/konfiger-python/blob/main/src/konfiger_stream.py>`__,
 each scan returns the current key value array ``('key', 'value')``
 
 .. code:: python
@@ -554,10 +554,10 @@ accept a cumpulsory second parameter ``lazyLoad`` which indicates
 whether to read all the entry from the file or string suring
 initialization. The lazyLoad parameter is useful for progressively read
 entries from a large file. The two initializing functions also take 2
-extra optional parameters ``delimeter`` and ``seperator``. If the third
-and fourth parameter is not specified the default is used, delimeter =
-``=``, seperator = ``\n``. If the file or string has different delimeter
-and seperator always send the third and fourth parameter.
+extra optional parameters ``delimiter`` and ``separator``. If the third
+and fourth parameter is not specified the default is used, delimiter =
+``=``, separator = ``\n``. If the file or string has different delimiter
+and separator always send the third and fourth parameter.
 
 The following initializer progressively read the file when needed
 
@@ -589,7 +589,7 @@ The following initializer read all the entries from String at once
    Twos=2222222222222
    """, False)
 
-Initialize a string which have custom delimeter and seperator
+Initialize a string which have custom delimiter and separator
 
 .. code:: python
 
@@ -725,11 +725,11 @@ KonfigerStream
 | Function                            | Description                    |
 +=====================================+================================+
 | def file_stream(file_path,          | Initialize a new               |
-| delimeter = "=", seperator =        | KonfigerStream object from the |
+| delimiter = "=", separator =        | KonfigerStream object from the |
 | "\n", err_tolerance =               | filePath. It throws en         |
 | False)                              | exception if the filePath does |
-|                                     | not exist or if the delimeter  |
-|                                     | or seperator is not a single   |
+|                                     | not exist or if the delimiter  |
+|                                     | or separator is not a single   |
 |                                     | character. The last parameter  |
 |                                     | is boolean if True the stream  |
 |                                     | is error tolerant and does not |
@@ -738,11 +738,11 @@ KonfigerStream
 |                                     | parameter is cumpulsory.       |
 +-------------------------------------+--------------------------------+
 | def string_stream(raw_string,       | Initialize a new               |
-| delimeter = "=", seperator =        | KonfigerStream object from a   |
+| delimiter = "=", separator =        | KonfigerStream object from a   |
 | "\n", err_tolerance =               | string. It throws en exception |
 | False)                              | if the rawString is not a      |
-|                                     | string or if the delimeter or  |
-|                                     | seperator is not a single      |
+|                                     | string or if the delimiter or  |
+|                                     | separator is not a single      |
 |                                     | character. The last parameter  |
 |                                     | is boolean if True the stream  |
 |                                     | is error tolerant and does not |
@@ -840,15 +840,15 @@ Functions
 | Function                            | Description                    |
 +=====================================+================================+
 | def from_file(file_path,            | Create the konfiger object     |
-| lazy_load=True, delimeter="=",      | from a file, the first(string) |
-| seperator="\n")                     | parameter is the file path,    |
+| lazy_load=True, delimiter="=",      | from a file, the first(string) |
+| separator="\n")                     | parameter is the file path,    |
 |                                     | the second parameter(boolean)  |
 |                                     | indicates whether to read all  |
 |                                     | the entry in the file in the   |
 |                                     | constructor or when needed,    |
 |                                     | the third param(char) is the   |
-|                                     | delimeter and the fourth       |
-|                                     | param(char) is the seperator.  |
+|                                     | delimiter and the fourth       |
+|                                     | param(char) is the separator.  |
 |                                     | This creates the konfiger      |
 |                                     | object from call to            |
 |                                     | ``fromStre                     |
@@ -859,15 +859,15 @@ Functions
 |                                     | object is returned.            |
 +-------------------------------------+--------------------------------+
 | def from_string(raw_string,         | Create the konfiger object     |
-| lazy_load=True, delimeter="=",      | from a string, the first       |
-| seperator="\n")                     | parameter is the String(can be |
+| lazy_load=True, delimiter="=",      | from a string, the first       |
+| separator="\n")                     | parameter is the String(can be |
 |                                     | empty), the second boolean     |
 |                                     | parameter indicates whether to |
 |                                     | read all the entry in the file |
 |                                     | in the constructor or when     |
 |                                     | needed, the third param is the |
-|                                     | delimeter and the fourth param |
-|                                     | is the seperator. The new      |
+|                                     | delimiter and the fourth param |
+|                                     | is the separator. The new      |
 |                                     | Konfiger object is returned.   |
 +-------------------------------------+--------------------------------+
 | def from_stream(konfiger_stream,    | Create the konfiger object     |
@@ -1029,14 +1029,14 @@ Functions
 |                                     | removed.                       |
 +-------------------------------------+--------------------------------+
 | def append_string(self, raw_string, | Append new data to the         |
-| delimeter=None, seperator=None)     | konfiger from a string. If the |
+| delimiter=None, separator=None)     | konfiger from a string. If the |
 |                                     | Konfiger is initialized with   |
 |                                     | lazy loading all the data will |
 |                                     | be loaded before the entries   |
 |                                     | from the new string is added.  |
 +-------------------------------------+--------------------------------+
 | def append_file(self, file_path,    | Read new datas from the file   |
-| delimeter=None, seperator=None)     | path and append. If the        |
+| delimiter=None, separator=None)     | path and append. If the        |
 |                                     | Konfiger is initialized with   |
 |                                     | lazy loading all the data will |
 |                                     | be loaded before the entries   |
@@ -1056,27 +1056,27 @@ Functions
 |                                     | not clear the already added    |
 |                                     | entries.                       |
 +-------------------------------------+--------------------------------+
-| def get_seperator(self)             | Get seperator char that        |
+| def get_separator(self)             | Get separator char that        |
 |                                     | seperate the key value entry,  |
 |                                     | default is ``\n``.             |
 +-------------------------------------+--------------------------------+
-| def get_delimeter(self)             | Get delimeter char that        |
+| def get_delimiter(self)             | Get delimiter char that        |
 |                                     | seperated the key from it      |
 |                                     | value, default is ``=``.       |
 +-------------------------------------+--------------------------------+
-| def set_seperator(self, seperator)  | Change seperator char that     |
+| def set_separator(self, separator)  | Change separator char that     |
 |                                     | seperate the datas, note that  |
 |                                     | the file is not updates, to    |
 |                                     | change the file call the       |
 |                                     | ``save()`` function. If the    |
-|                                     | new seperator is different     |
+|                                     | new separator is different     |
 |                                     | from the old one all the       |
 |                                     | entries values will be re      |
 |                                     | parsed to get the new proper   |
 |                                     | values, this process can take  |
 |                                     | time if the entries is much.   |
 +-------------------------------------+--------------------------------+
-| def set_delimeter(self, delimeter)  | Change delimeter char that     |
+| def set_delimiter(self, delimiter)  | Change delimiter char that     |
 |                                     | seperated the key from object, |
 |                                     | note that the file is not      |
 |                                     | updates, to change the file    |
@@ -1125,7 +1125,7 @@ Functions
 +-------------------------------------+--------------------------------+
 | def ``__str__``\ (self)             | All the kofiger datas are      |
 |                                     | parsed into valid string with  |
-|                                     | regards to the delimeter and   |
+|                                     | regards to the delimiter and   |
 |                                     | seprator, the result of this   |
 |                                     | method is what get written to  |
 |                                     | file in the ``save`` method.   |
@@ -1189,7 +1189,7 @@ The string sent as first parameter if parsed into valid key value using
 the separator and delimiter fields and if loaded from file it content is
 parsed into valid key value pair. The ``toString`` method also parse the
 ``konfiger_objects`` content into a valid string with regards to the
-separator and delimeter. The value is properly escaped and unescaped.
+separator and delimiter. The value is properly escaped and unescaped.
 
 The ``save`` function write the current ``Konfiger`` to the file, if the
 file does not exist it is created if it can. Everything is written in
@@ -1201,7 +1201,7 @@ Contributing
 
 Before you begin contribution please read the contribution guide at
 `CONTRIBUTING
-GUIDE <https://github.com/konfiger/konfiger.github.io/blob/master/CONTRIBUTING.MD>`__
+GUIDE <https://github.com/konfiger/konfiger.github.io/blob/main/CONTRIBUTING.MD>`__
 
 You can open issue or file a request that only address problems in this
 implementation on this repo, if the issue address the concepts of the
