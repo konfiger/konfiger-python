@@ -90,7 +90,7 @@ Boolean=True
         self.assertNotEqual(kon.get_float("TheNumber"), 0.1)
 
     def test_remove_entry_and_validate_size(self):
-        kon = from_string('One=111,Two=222,Three=333', False, '=', ',')
+        kon = from_string('One=111,Two=222,Three=333', True, '=', ',')
         kon.stream.error_tolerance(True)
     
         self.assertEqual(len(kon), 3)
@@ -101,6 +101,36 @@ Boolean=True
         self.assertEqual(kon.remove(0), "111")
         self.assertEqual(len(kon), 1)
         self.assertEqual(kon.get("Three"), "333")
+
+    def test_lazy_size(self):
+        kon = from_string('One=111,Two=222,Three=333', True, '=', ',')
+        
+        self.assertEqual(kon.lazy_size(), 0);
+        self.assertNotEqual(kon.lazy_size(), 3);
+        self.assertEqual(kon.get("One"), "111");
+        self.assertEqual(kon.lazy_size(), 1);
+        self.assertEqual(kon.get("Two"), "222");
+        self.assertEqual(kon.lazy_size(), 2);
+        self.assertEqual(kon.get("Three"), "333");
+        self.assertEqual(kon.lazy_size(), 3);
+        self.assertEqual(kon.lazy_size(), len(kon));
+
+    def test_remove_entry_and_lazy_size(self):
+        kon = from_string('One=111,Two=222,Three=333', True, '=', ',')
+        
+        self.assertEqual(kon.lazy_size(), 0);
+        self.assertNotEqual(kon.lazy_size(), 3);
+        self.assertNotEqual(kon.get("Two"), None);
+        self.assertEqual(kon.lazy_size(), 2);
+        self.assertEqual(kon.remove("Two"), "222");
+        self.assertNotEqual(kon.lazy_size(), 2);
+        self.assertEqual(kon.lazy_size(), 1);
+        self.assertEqual(kon.get("Two"), None);
+        self.assertEqual(kon.lazy_size(), 2);
+        self.assertEqual(kon.remove(0), "111");
+        self.assertEqual(kon.lazy_size(), 1);
+        self.assertEqual(kon.get("Three"), "333");
+        self.assertEqual(kon.lazy_size(), 1);
 
     def test_set_get_delimiter_and_separator(self):
         kon = from_file('test/test.config.ini', True)

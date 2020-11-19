@@ -160,6 +160,7 @@ kon = from_file('test/konfiger.conf', #the file pth
 print(kon.get("Twos"))
 
 #the size becomes 2,
+print(kon.lazy_size())
 
 #to read all the entries simply call the toString() method
 print(str(kon))
@@ -649,7 +650,8 @@ Even though python is weakly type the package does type checking to ensure wrong
 | def set_delimiter(self, delimiter)           | Change delimiter char that seperated the key from object, note that the file is not updates, to change the file call the `save()` function 
 | def set_case_sensitivity(self, case_sensitive) | change the case sensitivity of the konfiger object, if True `get("Key")` and `get("key")` will return different value, if False same value will be returned.
 | def is_case_sensitive(self) | Return True if the konfiger object is case sensitive and False if it not case sensitive
-| def `__len__`(self)           | Get the total size of key value entries in the konfiger
+| def `__len__`(self)           | Get the total size of key value entries in the konfiger.
+| def lazy_size(self)           | Get the lazy total number of entry that has been loaded into konfiger.
 | def clear(self)           | clear all the key value entries in the konfiger. This does not update the file call the `save` method to update the file
 | def is_empty(self)           | Check if the konfiger does not have an key value entry.
 | void update_at(index, value)           | Update the value at the specified index with the new string value, throws an error if the index is OutOfRange 

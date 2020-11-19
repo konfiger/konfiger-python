@@ -291,6 +291,9 @@ class Konfiger:
         
         return len(self.konfiger_objects)
         
+    def lazy_size(self):
+        return len(self.konfiger_objects)
+        
     def is_empty(self):
         return self.__len__() == 0
        
