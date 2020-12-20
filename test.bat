@@ -1,5 +1,14 @@
 @echo off
 
+SET SELECTED=%1
+
+if not "%SELECTED%" == "" (
+    echo.
+    echo %SELECTED%
+    python test/%SELECTED%.py
+    exit /b 0
+)
+
 echo.
 echo test_util
 python test/test_util.py
